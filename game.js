@@ -1,4 +1,5 @@
 const SAVE_KEY = "fengque-changan-save-v3";
+const ASSET_VERSION = "20260623-music2";
 
 const court = [
   { name: "韦皇后", role: "中宫", relation: "审视", mark: "后" },
@@ -896,6 +897,7 @@ const music = {
 
 music.audio.loop = true;
 music.audio.preload = "auto";
+music.audio.setAttribute("playsinline", "");
 
 function clamp(value) {
   return Math.max(0, Math.min(10, value));
@@ -1304,6 +1306,12 @@ function setMusicMood(mood) {
   if (music.enabled) startMusic();
 }
 
+function versionedAsset(path) {
+  if (!path || path.startsWith("data:")) return path;
+  const joiner = path.includes("?") ? "&" : "?";
+  return `${path}${joiner}v=${ASSET_VERSION}`;
+}
+
 function startMusic() {
   const tracks = music.config.tracks || {};
   const src = tracks[music.mood] || tracks.calm;
@@ -1313,9 +1321,12 @@ function startMusic() {
   }
 
   music.audio.volume = clamp(Number(music.config.volume ?? defaultMusicConfig.volume) * 10) / 10;
-  if (!music.audio.src.endsWith(src)) {
-    music.audio.src = src;
+  const nextSrc = versionedAsset(src);
+  const currentSrc = music.audio.getAttribute("src") || "";
+  if (currentSrc !== nextSrc) {
+    music.audio.src = nextSrc;
     music.audio.currentTime = 0;
+    music.audio.load();
   }
   music.audio.play().catch(() => {
     els.musicToggle.textContent = "乐声：点一下开启";
@@ -1333,7 +1344,7 @@ function toggleMusic() {
 }
 
 function loadMusicConfig() {
-  fetch("music-config.json", { cache: "no-store" })
+  fetch(versionedAsset("music-config.json"), { cache: "no-store" })
     .then((response) => (response.ok ? response.json() : null))
     .then((config) => {
       if (!config) return;
