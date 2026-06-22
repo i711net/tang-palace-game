@@ -71,15 +71,50 @@ const chapters = [
   },
 ];
 
+const sceneAssets = {
+  gate: "assets/scenes/gate.png",
+  yeting: "assets/scenes/yeting.png",
+  kitchen: "assets/scenes/kitchen.png",
+  penglai: "assets/scenes/penglai.png",
+  zichen: "assets/scenes/zichen.png",
+  hanyuan: "assets/scenes/hanyuan.png",
+};
+
+const portraitAssets = {
+  韦皇后: "assets/portraits/empress.png",
+  皇后: "assets/portraits/empress.png",
+  杨贵妃: "assets/portraits/yang.png",
+  裴淑妃: "assets/portraits/pei.png",
+  郑昭仪: "assets/portraits/zheng.png",
+  皇帝: "assets/portraits/emperor.png",
+  高内侍: "assets/portraits/eunuch.png",
+  薛将军: "assets/portraits/general.png",
+  云娘: "assets/portraits/yunniang.png",
+  锦儿: "assets/portraits/jiner.png",
+  "旧宫女阿蘅": "assets/portraits/aheng.png",
+  阿蘅: "assets/portraits/aheng.png",
+  尚食婢素荷: "assets/portraits/suhe.png",
+  素荷: "assets/portraits/suhe.png",
+  验籍女官: "assets/portraits/official.png",
+  掖庭管事: "assets/portraits/official.png",
+  尚宫局女史: "assets/portraits/official.png",
+  中宫女官: "assets/portraits/official.png",
+  掌衣女官: "assets/portraits/official.png",
+  册礼官: "assets/portraits/official.png",
+  上级女官: "assets/portraits/official.png",
+};
+
 const endings = {
-  deathGate: "你在朱雀门外自称能预知天命。妖言的罪名来得比雨更快，天亮前，你的名字没有写进宫籍。",
-  deathSearch: "你把青玉佩藏进发髻，验身宫人当场搜出。内廷最忌私藏，你还没入宫，命簿已经合上。",
-  deathWell: "你在井边逼问旧宫女，惊动了郑昭仪的人。第二日，掖庭只说有人夜里失足。",
-  poison: "你把莲子羹照常送去中宫。羹里藏着乌头，罪名也早备好了。",
-  exile: "你把一时宠眷当护身符，却没有证据也没有盟友。圣眷散后，冷宫青灯替你数余生。",
-  lake: "你当众锋芒太露，证据太薄。夜里有人说你失足落水，宫灯照到湖面时，已经没人再问真相。",
-  wine: "你饮下那杯换过的酒。毒并不烈，只够让你在众人面前失仪。从此恩宠与前程都成笑话。",
-  win: "含元殿钟鼓齐鸣。你用证据、盟友和时机把一盘死棋走活。凤印落掌，长安雪停。",
+  deathGate: { title: "结局：宫门未开", rank: "宫外民女", text: "你在朱雀门外自称能预知天命。妖言的罪名来得比雨更快，天亮前，你的名字没有写进宫籍。" },
+  deathSearch: { title: "结局：私物入罪", rank: "宫外民女", text: "你把青玉佩藏进发髻，验身宫人当场搜出。内廷最忌私藏，你还没入宫，命簿已经合上。" },
+  deathWell: { title: "结局：井边断声", text: "你在井边逼问旧宫女，惊动了郑昭仪的人。第二日，掖庭只说有人夜里失足。" },
+  poison: { title: "结局：一盏冷羹", text: "你把莲子羹照常送去中宫。羹里藏着乌头，罪名也早备好了。" },
+  exile: { title: "结局：青灯冷宫", text: "你把一时宠眷当护身符，却没有证据也没有盟友。圣眷散后，冷宫青灯替你数余生。" },
+  lake: { title: "结局：曲江沉月", text: "你当众锋芒太露，证据太薄。夜里有人说你失足落水，宫灯照到湖面时，已经没人再问真相。" },
+  wine: { title: "结局：宴上失仪", text: "你饮下那杯换过的酒。毒并不烈，只够让你在众人面前失仪。从此恩宠与前程都成笑话。" },
+  win: { title: "终章：凤印归掌", rank: "皇后", text: "含元殿钟鼓齐鸣。你用证据、盟友和时机把一盘死棋走活。凤印落掌，长安雪停。" },
+  officialPower: { title: "终章：女官执令", rank: "女官令", text: "你没有接凤印，而是请立女官院，重整掖庭、尚食、尚宫三司。你不坐中宫，却让六宫规矩从此绕不开你的名字。" },
+  consortAlly: { title: "终章：贵妃同盟", rank: "贵妃", text: "你接受杨贵妃递来的盟约，不急着争后位，而是先掌宴饮、赏赐和消息。六宫都知道，新贵妃笑时，风向已经变了。" },
 };
 
 const nodes = {
@@ -447,8 +482,8 @@ const nodes = {
     text: "郑昭仪伏罪，旧皇后病重交出凤印。满殿都在看你成为中宫后的第一道懿旨。",
     choices: [
       { text: "重整掖庭名册，禁私刑，立女官复核制度", next: "sealEnd", score: 2, delta: { ally: 2, favor: 1 } },
-      { text: "清算所有曾经轻慢你的人", ending: "exile", delta: { suspicion: 5 } },
-      { text: "废除所有妃嫔位分，只留自己", ending: "lake", delta: { suspicion: 5 } },
+      { text: "不接凤印，请立女官院总领六宫文簿", ending: "officialPower", rescueFlag: "ledgerCopy", fallbackEnding: "exile", delta: { ally: 1 } },
+      { text: "与杨贵妃结盟，先以贵妃身份分掌六宫", ending: "consortAlly", rescueFlag: "yangInterest", fallbackEnding: "lake", delta: { favor: 1 } },
     ],
   },
   sealEnd: { chapter: 4, speaker: "册礼官", location: "含元殿", mood: "win", checkpoint: true, final: true },
@@ -485,6 +520,9 @@ const els = {
   choices: document.getElementById("choices"),
   archive: document.getElementById("archiveText"),
   musicToggle: document.getElementById("musicToggle"),
+  speakerCard: document.getElementById("speakerCard"),
+  speakerPortrait: document.getElementById("speakerPortrait"),
+  speakerPortraitName: document.getElementById("speakerPortraitName"),
 };
 
 const music = {
@@ -662,6 +700,31 @@ function renderChapterTrack() {
     .join("");
 }
 
+function inferScene(node, chapter) {
+  const location = node.location || "";
+  if (location.includes("朱雀")) return "gate";
+  if (location.includes("掖庭") || location.includes("通铺") || location.includes("浣衣") || location.includes("针线") || location.includes("井边")) return "yeting";
+  if (location.includes("尚食") || location.includes("药柜") || location.includes("灶") || location.includes("中宫廊")) return "kitchen";
+  if (location.includes("蓬莱") || location.includes("更衣")) return "penglai";
+  if (location.includes("紫宸")) return "zichen";
+  if (location.includes("含元")) return "hanyuan";
+  return chapter.place;
+}
+
+function renderScene(node, chapter) {
+  const scene = inferScene(node, chapter);
+  const image = sceneAssets[scene] || sceneAssets[chapter.place] || "assets/palace-background.png";
+  els.shell.style.setProperty("--scene-image", `url("${image}")`);
+}
+
+function renderSpeakerPortrait(speaker) {
+  const image = portraitAssets[speaker];
+  els.speakerCard.classList.toggle("hidden", !image);
+  if (!image) return;
+  els.speakerPortrait.style.backgroundImage = `url("${image}")`;
+  els.speakerPortraitName.textContent = speaker;
+}
+
 function rankMark(rank) {
   if (rank.includes("皇后")) return "后";
   if (rank.includes("婕妤")) return "婕";
@@ -680,7 +743,7 @@ function checkpointText(node) {
         title: "终章：凤印归掌",
         speaker: "册礼官",
         rank: "皇后",
-        text: endings.win,
+        text: endings.win.text,
         choices: [
           { text: "重新开局", hardRestart: true },
           { text: "停在皇后结局", reread: true },
@@ -751,18 +814,21 @@ function renderNode() {
   renderMeters();
   renderMap(place);
   renderChapterTrack();
+  renderScene(rawNode, chapter);
+  renderSpeakerPortrait(display.speaker || rawNode.speaker);
   setMusicMood(rawNode.mood || (rawNode.checkpoint ? "win" : "calm"));
 }
 
 function showEnding(key) {
+  const ending = endings[key] || endings.exile;
   nodes.__ending = {
     chapter: state.chapter,
     speaker: "命簿",
     location: "命簿终页",
-    mood: key === "win" ? "win" : "danger",
-    rank: key === "win" ? "皇后" : currentChapter().rank,
-    title: key === "win" ? "终章：凤印归掌" : "结局：命簿断页",
-    text: endings[key],
+    mood: key === "win" || key === "officialPower" || key === "consortAlly" ? "win" : "danger",
+    rank: ending.rank || currentChapter().rank,
+    title: ending.title,
+    text: ending.text,
     choices: [
       { text: "读取最近章末存档", loadSave: true },
       { text: "重新开局", hardRestart: true },
