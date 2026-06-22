@@ -104,6 +104,18 @@ const portraitAssets = {
   上级女官: "assets/portraits/official.png",
 };
 
+const defaultMusicConfig = {
+  volume: 0.42,
+  tracks: {
+    calm: "assets/music/calm-palace.mp3",
+    tense: "assets/music/tension-court.mp3",
+    danger: "assets/music/danger-plot.mp3",
+    happy: "assets/music/happy.mp3",
+    win: "assets/music/victory-ceremony.mp3",
+    sad: "assets/music/ending-sad.mp3",
+  },
+};
+
 const endings = {
   deathGate: { title: "结局：宫门未开", rank: "宫外民女", text: "你在朱雀门外自称能预知天命。妖言的罪名来得比雨更快，天亮前，你的名字没有写进宫籍。" },
   deathSearch: { title: "结局：私物入罪", rank: "宫外民女", text: "你把青玉佩藏进发髻，验身宫人当场搜出。内廷最忌私藏，你还没入宫，命簿已经合上。" },
@@ -876,11 +888,14 @@ const els = {
 
 const music = {
   enabled: false,
-  ctx: null,
-  timer: null,
   mood: "calm",
-  gain: null,
+  audio: new Audio(),
+  config: defaultMusicConfig,
+  ready: false,
 };
+
+music.audio.loop = true;
+music.audio.preload = "auto";
 
 function clamp(value) {
   return Math.max(0, Math.min(10, value));
@@ -1221,7 +1236,7 @@ function renderNode() {
   renderChapterTrack();
   renderScene(rawNode, chapter);
   renderSpeakerPortrait(display.speaker || rawNode.speaker);
-  setMusicMood(rawNode.mood || (rawNode.checkpoint ? "win" : "calm"));
+  setMusicMood(rawNode.checkpoint && !rawNode.final ? "happy" : rawNode.mood || (rawNode.checkpoint ? "win" : "calm"));
 }
 
 function showEnding(key) {
@@ -1230,7 +1245,7 @@ function showEnding(key) {
     chapter: state.chapter,
     speaker: "命簿",
     location: "命簿终页",
-    mood: key === "win" || key === "officialPower" || key === "consortAlly" ? "win" : "danger",
+    mood: key === "win" || key === "officialPower" || key === "consortAlly" ? "win" : "sad",
     rank: ending.rank || currentChapter().rank,
     title: ending.title,
     text: ending.text,
@@ -1290,39 +1305,21 @@ function setMusicMood(mood) {
 }
 
 function startMusic() {
-  if (!music.ctx) {
-    music.ctx = new AudioContext();
-    music.gain = music.ctx.createGain();
-    music.gain.gain.value = 0.035;
-    music.gain.connect(music.ctx.destination);
+  const tracks = music.config.tracks || {};
+  const src = tracks[music.mood] || tracks.calm;
+  if (!src) {
+    els.musicToggle.textContent = "乐声：未配置";
+    return;
   }
-  if (music.ctx.state === "suspended") music.ctx.resume();
-  clearInterval(music.timer);
-  const patterns = {
-    calm: [392, 523, 587, 523, 440, 392],
-    tense: [330, 349, 392, 349, 330, 294],
-    danger: [220, 233, 196, 185, 196, 233],
-    win: [392, 494, 587, 784, 659, 587],
-  };
-  let beat = 0;
-  const play = () => {
-    const now = music.ctx.currentTime;
-    const freq = patterns[music.mood][beat % patterns[music.mood].length];
-    const osc = music.ctx.createOscillator();
-    const gain = music.ctx.createGain();
-    osc.type = music.mood === "danger" ? "sawtooth" : "sine";
-    osc.frequency.value = freq;
-    gain.gain.setValueAtTime(0, now);
-    gain.gain.linearRampToValueAtTime(0.75, now + 0.02);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + (music.mood === "win" ? 0.55 : 0.38));
-    osc.connect(gain);
-    gain.connect(music.gain);
-    osc.start(now);
-    osc.stop(now + 0.65);
-    beat += 1;
-  };
-  play();
-  music.timer = setInterval(play, music.mood === "tense" || music.mood === "danger" ? 360 : 520);
+
+  music.audio.volume = clamp(Number(music.config.volume ?? defaultMusicConfig.volume) * 10) / 10;
+  if (!music.audio.src.endsWith(src)) {
+    music.audio.src = src;
+    music.audio.currentTime = 0;
+  }
+  music.audio.play().catch(() => {
+    els.musicToggle.textContent = "乐声：点一下开启";
+  });
 }
 
 function toggleMusic() {
@@ -1331,9 +1328,28 @@ function toggleMusic() {
   if (music.enabled) {
     startMusic();
   } else {
-    clearInterval(music.timer);
-    if (music.ctx) music.ctx.suspend();
+    music.audio.pause();
   }
+}
+
+function loadMusicConfig() {
+  fetch("music-config.json", { cache: "no-store" })
+    .then((response) => (response.ok ? response.json() : null))
+    .then((config) => {
+      if (!config) return;
+      music.config = {
+        ...defaultMusicConfig,
+        ...config,
+        tracks: { ...defaultMusicConfig.tracks, ...(config.tracks || {}) },
+      };
+      if (music.enabled) startMusic();
+    })
+    .catch(() => {
+      music.config = defaultMusicConfig;
+    })
+    .finally(() => {
+      music.ready = true;
+    });
 }
 
 els.nameForm.addEventListener("submit", (event) => {
@@ -1357,4 +1373,5 @@ document.getElementById("restartBottom").addEventListener("click", restartChapte
 els.musicToggle.addEventListener("click", toggleMusic);
 
 renderCourt();
+loadMusicConfig();
 updateContinueButton();

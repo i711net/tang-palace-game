@@ -1,0 +1,11 @@
+{
+  "volume": 0.42,
+  "tracks": {
+    "calm": "assets/music/calm-palace.mp3",
+    "tense": "assets/music/tension-court.mp3",
+    "danger": "assets/music/danger-plot.mp3",
+    "happy": "assets/music/happy.mp3",
+    "win": "assets/music/victory-ceremony.mp3",
+    "sad": "assets/music/ending-sad.mp3"
+  }
+}
