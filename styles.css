@@ -553,6 +553,17 @@ h1 {
   color: #fff3d4;
 }
 
+.ending-empress-view .scene-art {
+  filter: saturate(1.18) brightness(1.1);
+}
+
+.ending-empress-view .dialogue-panel {
+  background:
+    radial-gradient(circle at 18% 0%, rgba(255, 230, 142, 0.28), transparent 34%),
+    linear-gradient(180deg, rgba(91, 30, 11, 0.97), rgba(154, 72, 17, 0.97));
+  border-color: rgba(255, 231, 143, 0.95);
+}
+
 .ending #storyText,
 .checkpoint #storyText,
 .ending .speaker-row {
@@ -628,6 +639,25 @@ h1 {
 .ending-good h2,
 .ending-good .ending-kicker {
   color: #fff1a8;
+}
+
+.ending-empress h2 {
+  color: #fff2a8;
+  font-size: 52px;
+}
+
+.ending-empress .ending-kicker {
+  color: #fff6c9;
+  font-size: 22px;
+}
+
+.ending-empress .ending-name {
+  color: #ffe68b;
+}
+
+.ending-empress .ending-summary section {
+  border-color: rgba(255, 232, 153, 0.52);
+  background: rgba(255, 235, 174, 0.16);
 }
 
 .ending-bad h2 {
@@ -723,6 +753,10 @@ h1 {
 
   .ending-card h2 {
     font-size: 31px;
+  }
+
+  .ending-empress h2 {
+    font-size: 36px;
   }
 
   .ending-summary {

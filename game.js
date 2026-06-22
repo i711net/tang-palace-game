@@ -1,5 +1,5 @@
 const SAVE_KEY = "fengque-changan-save-v3";
-const ASSET_VERSION = "20260623-queenplot1";
+const ASSET_VERSION = "20260623-multiending1";
 
 const court = [
   { name: "韦皇后", role: "中宫", relation: "审视", mark: "后" },
@@ -79,6 +79,7 @@ const sceneAssets = {
   penglai: "assets/scenes/penglai.png",
   zichen: "assets/scenes/zichen.png",
   hanyuan: "assets/scenes/hanyuan.png",
+  empress: "assets/scenes/hanyuan.png",
 };
 
 const portraitAssets = {
@@ -123,12 +124,14 @@ const endings = {
   deathWell: { type: "bad", banner: "暗线断绝", title: "结局：井边断声", text: "你在井边逼问旧宫女，惊动了郑昭仪的人。第二日，掖庭只说有人夜里失足。", you: "你的线索断在井边，连申辩的机会都没有留下。", allies: "知道内情的人从此不敢再说话，阿蘅旧案被重新压回尘土里。", court: "郑昭仪少了一个隐患，掖庭夜巡却比从前更森严。" },
   poison: { type: "bad", banner: "毒局失守", title: "结局：一盏冷羹", text: "你把莲子羹照常送去中宫。羹里藏着乌头，罪名也早备好了。", you: "你成了尚食局毒案的替罪人，所有证据都被人提前摆成了死局。", allies: "素荷被迫闭口，与你有过好意的人也只能自保。", court: "中宫借此清洗尚食局，真正下毒的人退入更深的帘影。" },
   queenPoison: { type: "bad", banner: "中宫杀局", title: "结局：香尽灯灭", text: "皇后赐下的安神香里藏着慢毒。你以为那只是一次试探，等察觉时，连脉案都已被人改过。", you: "你倒在册礼前夜，离凤印只差一步。", allies: "云娘、素荷和高内侍各被调离，前面埋下的暗线被中宫一夜剪断。", court: "皇帝震怒，却只查到替死的宫人。真正的谋局藏回凤帘之后。" },
-  exile: { type: "other", banner: "前程止步", title: "结局：青灯冷宫", text: "你把一时宠眷当护身符，却没有证据也没有盟友。圣眷散后，冷宫青灯替你数余生。", you: "你活了下来，却被困在冷宫旧院，日日抄经换一盏灯油。", allies: "曾帮过你的人不敢再来，只能偶尔托人送一件旧衣。", court: "六宫很快有了新的风波，你的名字成了新人入宫时的警示。" },
+  exile: { type: "other", banner: "前程止步", title: "结局：青灯冷宫", rank: "冷宫才人", text: "你把一时宠眷当护身符，却没有证据也没有盟友。圣眷散后，冷宫青灯替你数余生。", you: "你活了下来，却被困在冷宫旧院，日日抄经换一盏灯油。", allies: "曾帮过你的人不敢再来，只能偶尔托人送一件旧衣。", court: "六宫很快有了新的风波，你的名字成了新人入宫时的警示。" },
   lake: { type: "bad", banner: "锋芒反噬", title: "结局：曲江沉月", text: "你当众锋芒太露，证据太薄。夜里有人说你失足落水，宫灯照到湖面时，已经没人再问真相。", you: "你把局势逼得太急，却没有给自己留下退路。", allies: "少数想救你的人被调离内廷，云娘若还在，也只能把你的名字藏在心里。", court: "湖面恢复平静，宫里的人学会了少看、少问、少记。" },
   wine: { type: "other", banner: "宠眷尽失", title: "结局：宴上失仪", text: "你饮下那杯换过的酒。毒并不烈，只够让你在众人面前失仪。从此恩宠与前程都成笑话。", you: "你没有死，却再也进不了真正的权力中心。", allies: "杨贵妃收回试探的目光，皇后也不再把你当可用之人。", court: "蓬莱夜宴之后，众人都知道有些局不杀人，只毁人。" },
-  win: { type: "good", banner: "恭喜通关", title: "终章：凤印归掌", rank: "皇后", text: "含元殿钟鼓齐鸣。皇后谋害你的香案被当殿揭开，皇帝亲自扶你起身。你用证据、盟友和时机把一盘死棋走活。凤印落掌，长安雪停。", you: "你从宫女走到中宫，不是一步登天，而是在一次次召对、救局和守规矩里让皇帝看见你的心性。", allies: "云娘入尚宫局，素荷重回尚食局清账，高内侍也因护证有功得以全身而退。", court: "旧皇后幽禁别宫，郑昭仪一党伏法，掖庭第一次有人敢把冤名写成白纸黑字。" },
-  officialPower: { type: "good", banner: "恭喜达成隐藏结局", title: "终章：女官执令", rank: "女官令", text: "你没有接凤印，而是请立女官院，重整掖庭、尚食、尚宫三司。你不坐中宫，却让六宫规矩从此绕不开你的名字。", you: "你放下后位，换来真正能改宫规的权柄。", allies: "曾被你救下的人被分入各司，成为新女官院的第一批见证者。", court: "后宫仍有争斗，但账册、药牌、名籍从此不再只听妃嫔一句话。" },
-  consortAlly: { type: "good", banner: "恭喜达成同盟结局", title: "终章：贵妃同盟", rank: "贵妃", text: "你接受杨贵妃递来的盟约，不急着争后位，而是先掌宴饮、赏赐和消息。六宫都知道，新贵妃笑时，风向已经变了。", you: "你没有立刻登上后位，却拿到了更灵活的生路和权势。", allies: "杨贵妃与你共分六宫消息，高内侍替你守住内廷往来。", court: "皇后之位暂悬，长安的每一场宴饮都变成新的棋局。" },
+  win: { type: "empress", scene: "empress", banner: "恭喜你成为一代皇后", title: "终章：凤印归掌", rank: "皇后", text: "含元殿钟鼓齐鸣。皇后谋害你的香案被当殿揭开，皇帝亲自扶你起身。你用证据、盟友和时机把一盘死棋走活。凤印落掌，长安雪停。", you: "你从宫女走到中宫，不是一步登天，而是在一次次召对、救局和守规矩里让皇帝看见你的心性。", allies: "云娘入尚宫局，素荷重回尚食局清账，高内侍也因护证有功得以全身而退。", court: "旧皇后幽禁别宫，郑昭仪一党伏法，掖庭第一次有人敢把冤名写成白纸黑字。" },
+  officialPower: { type: "good", banner: "恭喜完成游戏", title: "终章：女官执令", rank: "女官令", text: "你没有接凤印，而是请立女官院，重整掖庭、尚食、尚宫三司。你不坐中宫，却让六宫规矩从此绕不开你的名字。", you: "你放下后位，换来真正能改宫规的权柄。", allies: "曾被你救下的人被分入各司，成为新女官院的第一批见证者。", court: "后宫仍有争斗，但账册、药牌、名籍从此不再只听妃嫔一句话。" },
+  consortAlly: { type: "good", banner: "恭喜完成游戏", title: "终章：贵妃同盟", rank: "贵妃", text: "你接受杨贵妃递来的盟约，不急着争后位，而是先掌宴饮、赏赐和消息。六宫都知道，新贵妃笑时，风向已经变了。", you: "你没有立刻登上后位，却拿到了更灵活的生路和权势。", allies: "杨贵妃与你共分六宫消息，高内侍替你守住内廷往来。", court: "皇后之位暂悬，长安的每一场宴饮都变成新的棋局。" },
+  retire: { type: "other", banner: "恭喜完成游戏", title: "终章：宫外归隐", rank: "宫外命妇", text: "你没有接凤印，也没有继续留在权力中心。皇帝准你以功出宫，赐宅长安，旧案卷宗由女官院封存。", you: "你带着宫中旧账离开红墙，从此不再每日听鼓入值，却仍能左右许多人的命运。", allies: "云娘和素荷留在宫中替你守住新规，高内侍偶尔递出一封平安信。", court: "六宫少了一位新后，却多了一条退路：不是所有胜利都必须坐上凤座。" },
+  quietConsort: { type: "other", banner: "恭喜完成游戏", title: "终章：静妃守成", rank: "静妃", text: "你拒绝凤印，只求封妃守宫，保住前面救下的人。皇帝允你不入中宫，却给你一宫清静。", you: "你没有成为皇后，却避开了最锋利的位置，以静妃身份活到最后。", allies: "与你相善的人被调到你的宫中，不再随意被人打杀。", court: "后位暂空，六宫重新洗牌。你少了最高权势，也少了最重的杀机。" },
 };
 
 const nodes = {
@@ -893,10 +896,10 @@ const nodes = {
       { value: "郑昭仪伏罪，旧皇后病重交出凤印。满殿都在看你成为中宫后的第一道懿旨。" },
     ],
     choices: [
-      { text: "重整掖庭名册，禁私刑，立女官复核制度", next: "sealEnd", score: 2, delta: { ally: 2, favor: 1 } },
-      { text: "不接凤印，请立女官院总领六宫文簿", ending: "officialPower", rescueFlag: "ledgerCopy", fallbackEnding: "exile", delta: { ally: 1 } },
-      { text: "与杨贵妃结盟，先以贵妃身份分掌六宫", ending: "consortAlly", rescueFlag: "yangInterest", fallbackEnding: "lake", delta: { favor: 1 } },
-      { text: "请皇帝即刻废后立新，不必再问群臣", ending: "lake", delta: { suspicion: 5 } },
+      { text: "接凤印为后，重整掖庭名册，禁私刑", ending: "win", rescueFlag: "queenPlotExposed", fallbackEnding: "quietConsort", rescueScore: 2, delta: { ally: 2, favor: 1 } },
+      { text: "不接凤印，请立女官院总领六宫文簿", ending: "officialPower", rescueFlag: "ledgerCopy", fallbackEnding: "retire", delta: { ally: 1 } },
+      { text: "与杨贵妃结盟，先以贵妃身份分掌六宫", ending: "consortAlly", rescueFlag: "yangInterest", fallbackEnding: "quietConsort", delta: { favor: 1 } },
+      { text: "请准以功出宫，带着封赏离开六宫", ending: "retire", delta: { suspicion: -1, ally: 1 } },
     ],
   },
   sealEnd: { chapter: 4, speaker: "册礼官", location: "含元殿", mood: "win", checkpoint: true, final: true },
@@ -1225,7 +1228,7 @@ function inferScene(node, chapter) {
 }
 
 function renderScene(node, chapter) {
-  const scene = inferScene(node, chapter);
+  const scene = node.scene || inferScene(node, chapter);
   const image = sceneAssets[scene] || sceneAssets[chapter.place] || "assets/palace-background.png";
   els.shell.style.setProperty("--scene-image", `url("${image}")`);
 }
@@ -1254,6 +1257,7 @@ function checkpointText(node) {
       saveCheckpoint(chapters.length - 1);
       return {
         ...endings.win,
+        scene: endings.win.scene,
         speaker: "册礼官",
         choices: [
           { text: "重新开局", hardRestart: true },
@@ -1301,6 +1305,10 @@ function renderNode() {
   const isEndingView = state.ended || Boolean(rawNode.final && display.type);
 
   els.shell.classList.toggle("ending", isEndingView);
+  els.shell.classList.toggle("ending-empress-view", isEndingView && display.type === "empress");
+  els.shell.classList.toggle("ending-good-view", isEndingView && display.type === "good");
+  els.shell.classList.toggle("ending-other-view", isEndingView && display.type === "other");
+  els.shell.classList.toggle("ending-bad-view", isEndingView && display.type === "bad");
   els.shell.classList.toggle("checkpoint", Boolean(rawNode.checkpoint) && !isEndingView);
   els.title.textContent = display.title || chapter.title;
   els.speaker.textContent = display.speaker || rawNode.speaker;
@@ -1333,7 +1341,7 @@ function renderNode() {
   renderMeters();
   renderMap(place);
   renderChapterTrack();
-  renderScene(rawNode, chapter);
+  renderScene(isEndingView ? { ...rawNode, scene: display.scene } : rawNode, chapter);
   renderSpeakerPortrait(display.speaker || rawNode.speaker);
   setMusicMood(rawNode.checkpoint && !rawNode.final ? "happy" : rawNode.mood || (rawNode.checkpoint ? "win" : "calm"));
 }
@@ -1344,9 +1352,10 @@ function showEnding(key) {
     chapter: state.chapter,
     speaker: "命簿",
     location: "命簿终页",
-    mood: key === "win" || key === "officialPower" || key === "consortAlly" ? "win" : "sad",
+    mood: ending.type === "bad" ? "sad" : "win",
     rank: ending.rank || currentChapter().rank,
     type: ending.type || "bad",
+    scene: ending.scene,
     banner: ending.banner,
     title: ending.title,
     text: ending.text,
