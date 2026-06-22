@@ -1,5 +1,5 @@
 const SAVE_KEY = "fengque-changan-save-v3";
-const ASSET_VERSION = "20260623-multiending1";
+const ASSET_VERSION = "20260623-checkpointfix1";
 
 const court = [
   { name: "韦皇后", role: "中宫", relation: "审视", mark: "后" },
@@ -1033,6 +1033,11 @@ function resolveRescueText(choice) {
   return formatText(choice.rescueText);
 }
 
+function visibleChoicesFor(display, nodeId, fixed = false) {
+  if (fixed) return display.choices || [];
+  return orderedChoices(resolveChoices(display.choices), nodeId);
+}
+
 function endingHtml(ending, storyText) {
   const type = ending.type || "bad";
   const name = state.playerName || "沈清辞";
@@ -1328,7 +1333,7 @@ function renderNode() {
     : rawNode.checkpoint
       ? "章末才会自动存档；分数不够不会保存进度。"
       : `本章目标：${chapter.summary} 晋升线 ${chapter.minScore} 分。`;
-  state.visibleChoices = orderedChoices(resolveChoices(display.choices), state.node);
+  state.visibleChoices = visibleChoicesFor(display, state.node, rawNode.checkpoint || isEndingView);
   els.choices.innerHTML = state.visibleChoices
     .map(
       (choice, index) => `
@@ -1376,7 +1381,8 @@ function showEnding(key) {
 function choose(index) {
   const rawNode = nodes[state.node];
   const display = rawNode.checkpoint ? checkpointText(rawNode) : rawNode;
-  const choice = state.visibleChoices[index] || resolveChoices(display.choices)[index];
+  const fixedChoices = rawNode.checkpoint || state.ended || Boolean(rawNode.final && display.type);
+  const choice = state.visibleChoices[index] || visibleChoicesFor(display, state.node, fixedChoices)[index];
   if (!choice) return;
 
   if (choice.hardRestart) return hardRestart();
