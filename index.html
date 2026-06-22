@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>凤阙长安：唐宫选择生存游戏</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <section class="start-screen" id="startScreen" aria-label="开局设定">
+      <div class="start-card">
+        <p class="label">凤阙长安</p>
+        <h1>从宫女到皇后</h1>
+        <p>输入你的名字，入朱雀门，过掖庭、尚食局、蓬莱殿、紫宸殿与含元殿。每章分数够了才会晋升并存档。</p>
+        <form id="nameForm">
+          <label for="playerName">宫中姓名</label>
+          <input id="playerName" name="playerName" maxlength="8" autocomplete="off" placeholder="例如：沈清辞" />
+          <div class="start-actions">
+            <button type="submit">入宫</button>
+            <button id="continueGame" type="button">读取存档</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <main class="game-shell">
+      <section class="stage" aria-label="唐宫剧情舞台">
+        <div class="scene-art" role="img" aria-label="唐代宫廷视觉场景"></div>
+        <div class="scene-vignette"></div>
+
+        <header class="topbar">
+          <div>
+            <p class="label">凤阙长安</p>
+            <h1 id="chapterTitle">第一章：长安雨夜</h1>
+          </div>
+          <div class="top-actions">
+            <button id="musicToggle" class="ghost-button" type="button">乐声：关</button>
+            <button id="restartTop" class="ghost-button" type="button">重开</button>
+          </div>
+        </header>
+
+        <aside class="character-card">
+          <div class="portrait" id="portrait">沈</div>
+          <div>
+            <p class="label">当前身份</p>
+            <h2 id="rankName">掖庭新婢</h2>
+            <p id="locationName">朱雀门外</p>
+            <p id="addressName" class="address-name">沈宫人</p>
+          </div>
+        </aside>
+
+        <aside class="court-list" aria-label="宫廷人物">
+          <h2>宫中棋局</h2>
+          <div id="courtList"></div>
+        </aside>
+
+        <section class="dialogue-panel" aria-live="polite">
+          <div class="speaker-row">
+            <span id="speakerName">旁白</span>
+            <span id="turnCount">第 1 步</span>
+          </div>
+          <p id="storyText"></p>
+          <div id="choices" class="choices"></div>
+        </section>
+      </section>
+
+      <section class="control-deck" aria-label="状态与宫廷地图">
+        <div class="meters">
+          <div class="meter">
+            <span>圣眷</span>
+            <strong id="favorValue">0</strong>
+            <div><i id="favorBar"></i></div>
+          </div>
+          <div class="meter">
+            <span>猜忌</span>
+            <strong id="suspicionValue">0</strong>
+            <div><i id="suspicionBar"></i></div>
+          </div>
+          <div class="meter">
+            <span>心计</span>
+            <strong id="witValue">0</strong>
+            <div><i id="witBar"></i></div>
+          </div>
+          <div class="meter">
+            <span>盟友</span>
+            <strong id="allyValue">0</strong>
+            <div><i id="allyBar"></i></div>
+          </div>
+          <div class="meter score-meter">
+            <span>章分</span>
+            <strong id="scoreValue">0</strong>
+            <div><i id="scoreBar"></i></div>
+          </div>
+        </div>
+
+        <div class="chapter-panel">
+          <h2>晋升进度</h2>
+          <div id="chapterTrack" class="chapter-track"></div>
+        </div>
+
+        <div class="map-panel">
+          <h2>长安宫城</h2>
+          <div class="map-grid" id="mapGrid"></div>
+        </div>
+
+        <div class="archive-panel">
+          <h2>命簿</h2>
+          <p id="archiveText">每一步都可能改写命簿。选错会立刻结束，选对则进入下一局。</p>
+          <button id="restartBottom" type="button">从朱雀门重来</button>
+        </div>
+      </section>
+    </main>
+
+    <script src="game.js"></script>
+  </body>
+</html>
