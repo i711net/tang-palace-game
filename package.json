@@ -1,0 +1,11 @@
+{
+  "name": "fengque-changan",
+  "version": "0.2.0",
+  "private": true,
+  "description": "A static Tang dynasty palace choice game.",
+  "scripts": {
+    "start": "npx serve .",
+    "check": "npx playwright screenshot --browser=chromium file:///C:/Users/Administrator/Documents/C1/index.html preview-desktop.png"
+  },
+  "devDependencies": {}
+}

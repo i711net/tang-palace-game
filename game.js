@@ -1,0 +1,887 @@
+const SAVE_KEY = "fengque-changan-save-v3";
+
+const court = [
+  { name: "韦皇后", role: "中宫", relation: "审视", mark: "后" },
+  { name: "杨贵妃", role: "贵妃", relation: "试探", mark: "贵" },
+  { name: "裴淑妃", role: "四妃", relation: "拉拢", mark: "淑" },
+  { name: "郑昭仪", role: "九嫔", relation: "敌意", mark: "昭" },
+  { name: "高内侍", role: "内侍省", relation: "可用", mark: "高" },
+  { name: "薛将军", role: "禁军", relation: "观望", mark: "将" },
+];
+
+const places = [
+  { id: "gate", name: "朱雀门", note: "验身、名籍、流言最快。" },
+  { id: "yeting", name: "掖庭", note: "宫女、杂役、旧案和暗线聚集。" },
+  { id: "kitchen", name: "尚食局", note: "御膳、药汤与栽赃之地。" },
+  { id: "penglai", name: "蓬莱殿", note: "后妃设宴，试探都在酒盏里。" },
+  { id: "zichen", name: "紫宸殿", note: "皇帝召对，一句话可升可坠。" },
+  { id: "hanyuan", name: "含元殿", note: "大朝会，胜负见天下。" },
+];
+
+const chapters = [
+  {
+    id: "gate",
+    title: "第一章：初入宫门",
+    start: "gateStart",
+    rank: "宫外民女",
+    promotion: "掖庭宫女",
+    minScore: 9,
+    place: "gate",
+    summary: "从朱雀门活着入宫，学会低头，也学会留凭证。",
+  },
+  {
+    id: "yeting",
+    title: "第二章：掖庭暗账",
+    start: "yetingStart",
+    rank: "掖庭宫女",
+    promotion: "司籍女史",
+    minScore: 10,
+    place: "yeting",
+    summary: "在低等宫女的倾轧里守住名册和清白。",
+  },
+  {
+    id: "kitchen",
+    title: "第三章：尚食毒羹",
+    start: "kitchenStart",
+    rank: "司籍女史",
+    promotion: "才人",
+    minScore: 10,
+    place: "kitchen",
+    summary: "从御膳、药气和替罪局里保住证据。",
+  },
+  {
+    id: "banquet",
+    title: "第四章：蓬莱夜宴",
+    start: "banquetStart",
+    rank: "才人",
+    promotion: "婕妤",
+    minScore: 10,
+    place: "penglai",
+    summary: "在妃嫔席间答话、结盟、避锋芒。",
+  },
+  {
+    id: "seal",
+    title: "第五章：凤印归掌",
+    start: "sealStart",
+    rank: "婕妤",
+    promotion: "皇后",
+    minScore: 10,
+    place: "hanyuan",
+    summary: "含元殿对质，前面埋下的善缘会决定你有没有退路。",
+  },
+];
+
+const endings = {
+  deathGate: "你在朱雀门外自称能预知天命。妖言的罪名来得比雨更快，天亮前，你的名字没有写进宫籍。",
+  deathSearch: "你把青玉佩藏进发髻，验身宫人当场搜出。内廷最忌私藏，你还没入宫，命簿已经合上。",
+  deathWell: "你在井边逼问旧宫女，惊动了郑昭仪的人。第二日，掖庭只说有人夜里失足。",
+  poison: "你把莲子羹照常送去中宫。羹里藏着乌头，罪名也早备好了。",
+  exile: "你把一时宠眷当护身符，却没有证据也没有盟友。圣眷散后，冷宫青灯替你数余生。",
+  lake: "你当众锋芒太露，证据太薄。夜里有人说你失足落水，宫灯照到湖面时，已经没人再问真相。",
+  wine: "你饮下那杯换过的酒。毒并不烈，只够让你在众人面前失仪。从此恩宠与前程都成笑话。",
+  win: "含元殿钟鼓齐鸣。你用证据、盟友和时机把一盘死棋走活。凤印落掌，长安雪停。",
+};
+
+const nodes = {
+  gateStart: {
+    chapter: 0,
+    speaker: "高内侍",
+    location: "朱雀门外",
+    mood: "calm",
+    text: "{name}醒在朱雀门外，袖中手机化成一枚青玉佩。高内侍问：会什么，凭什么让你入宫？",
+    choices: [
+      { text: "说自己识字会记账，愿从抄录杂籍做起", next: "gateInspect", score: 2, delta: { wit: 1 }, set: { eunuchTrust: true } },
+      { text: "说自己能预知天命，请求面圣", ending: "deathGate", delta: { suspicion: 4 } },
+      { text: "假称名门遗孤，要求见皇后", ending: "lake", delta: { suspicion: 3 } },
+    ],
+  },
+  gateInspect: {
+    chapter: 0,
+    speaker: "验籍女官",
+    location: "朱雀门内",
+    mood: "tense",
+    text: "入门前要验身。青玉佩来历不明，旁边一个叫云娘的新宫女低声提醒：私物若藏住，日后反而说不清。",
+    choices: [
+      { text: "主动呈上玉佩，登记入库", next: "gateDorm", score: 2, delta: { wit: 1, suspicion: -1 }, set: { jadeRegistered: true } },
+      { text: "把玉佩藏进发髻", ending: "deathSearch", delta: { suspicion: 4 } },
+      { text: "把玉佩塞给云娘，让她替你藏一夜", next: "gateDorm", score: 1, delta: { suspicion: 1 }, set: { cloudDebt: true } },
+    ],
+  },
+  gateDorm: {
+    chapter: 0,
+    speaker: "掖庭管事",
+    location: "新婢通铺",
+    mood: "tense",
+    text: "通铺里，老宫女锦儿故意把最潮的铺位分给你。云娘脚踝扭伤，若换铺，她今晚很可能发热。",
+    choices: [
+      { text: "把干铺让给云娘，自己睡近门处", next: "gateAccident", score: 2, delta: { ally: 1 }, set: { yunAlly: true } },
+      { text: "当众指出锦儿欺生，请管事重分", next: "gateAccident", score: 1, delta: { wit: 1, suspicion: 1 }, set: { jinResent: true } },
+      { text: "抢回干铺，让云娘自己想办法", next: "gateAccident", score: 0, delta: { suspicion: 1 }, set: { yunCold: true } },
+    ],
+  },
+  gateAccident: {
+    chapter: 0,
+    speaker: "旁白",
+    location: "朱雀门廊",
+    mood: "danger",
+    text: "半夜点名，一个新婢怀中掉出外信。众人惊慌，锦儿忽然说，白日见你和她说过话。",
+    choices: [
+      { text: "先请女官验信封泥，再说自己只在点名时见过她", next: "gateBasin", score: 2, delta: { wit: 1 } },
+      { text: "看向云娘，请她替你作证", next: "gateBasin", rescueFlag: "yunAlly", rescueScore: 2, rescueDelta: { ally: 1 }, fallbackEnding: "exile" },
+      { text: "替那新婢把信藏进袖中", ending: "exile", delta: { suspicion: 5 } },
+    ],
+  },
+  gateBasin: {
+    chapter: 0,
+    speaker: "锦儿",
+    location: "浣衣盆边",
+    mood: "tense",
+    text: "次日浣衣，锦儿把你的木盆踢翻，又笑着说新来的手脚笨。周围宫女都在等你出丑。",
+    choices: [
+      { text: "不争嘴，先把水迹擦净，再记下木牌编号", next: "gateOath", score: 2, delta: { wit: 1 } },
+      { text: "把水泼回锦儿身上", next: "gateOath", score: 0, delta: { suspicion: 2 }, set: { jinResent: true } },
+      { text: "哭着去找高内侍告状", next: "gateOath", score: 1, delta: { ally: 1, suspicion: 1 } },
+    ],
+  },
+  gateOath: {
+    chapter: 0,
+    speaker: "高内侍",
+    location: "掖庭门前",
+    mood: "calm",
+    text: "高内侍问你：入宫第一夜，学到了什么？这句话看似闲问，其实是最后一道门槛。",
+    choices: [
+      { text: "宫里争的是凭证，不是一时口舌", next: "gateEnd", score: 2, delta: { wit: 1 } },
+      { text: "只要靠对人，就不用怕旁人陷害", next: "gateEnd", score: 1, delta: { ally: 1, suspicion: 1 } },
+      { text: "谁欺我，我日后必十倍讨回", ending: "lake", delta: { suspicion: 4 } },
+    ],
+  },
+  gateEnd: { chapter: 0, speaker: "高内侍", location: "掖庭门前", mood: "calm", checkpoint: true },
+
+  yetingStart: {
+    chapter: 1,
+    speaker: "尚宫局女史",
+    location: "掖庭值房",
+    mood: "calm",
+    text: "{address}被拨到掖庭抄录名册。旧账里有宫女升降、病亡、调任，也有被人刻意涂改的空白。",
+    choices: [
+      { text: "按年月重排，另标夜间调任", next: "yetingThread", score: 2, delta: { wit: 1 } },
+      { text: "先抄最上面的几页求快", next: "yetingThread", score: 1 },
+      { text: "翻看贵人私印，拿给同伴看", ending: "deathWell", delta: { suspicion: 4 } },
+    ],
+  },
+  yetingThread: {
+    chapter: 1,
+    speaker: "锦儿",
+    location: "针线房",
+    mood: "tense",
+    text: "给才人们缝春衣时，锦儿把一段贵妃宫里的金线塞进你针盒。若被搜出，就是私盗。",
+    choices: [
+      { text: "立刻把针盒封好，叫管事当面开盒", next: "yetingLaundry", score: 2, delta: { wit: 1 } },
+      { text: "悄悄把金线扔进炭盆", next: "yetingLaundry", score: 1, delta: { suspicion: 1 } },
+      { text: "转塞进云娘的针盒", ending: "exile", delta: { suspicion: 4 } },
+    ],
+  },
+  yetingLaundry: {
+    chapter: 1,
+    speaker: "云娘",
+    location: "浣衣处",
+    mood: "tense",
+    text: "贵妃宫里少了一条绣带，浣衣处所有新婢都要搜身。云娘脸色发白，她袖口沾着相同香粉。",
+    choices: [
+      { text: "先替她遮住袖口，再问香粉从何处来", next: "yetingRumor", score: 2, delta: { ally: 1 }, set: { yunProtected: true } },
+      { text: "提醒管事先搜锦儿的柜子", next: "yetingRumor", rescueFlag: "jinResent", rescueEnding: "lake", rescueScore: 2, score: 1, delta: { wit: 1 } },
+      { text: "立刻撇清自己，说云娘最可疑", next: "yetingRumor", score: 0, delta: { suspicion: 2 }, set: { yunCold: true } },
+    ],
+  },
+  yetingRumor: {
+    chapter: 1,
+    speaker: "旧宫女阿蘅",
+    location: "掖庭井边",
+    mood: "tense",
+    text: "阿蘅说郑昭仪宫里的人夜里取过一页名册。她怕惹事，只肯说半句。",
+    choices: [
+      { text: "只问时辰和来人衣色，不问主谋", next: "yetingNight", score: 2, delta: { wit: 1, ally: 1 }, set: { ahengTrust: true } },
+      { text: "许诺日后护她，让她写口供", next: "yetingNight", score: 1, delta: { ally: 1, suspicion: 1 }, set: { ahengTrust: true } },
+      { text: "抓住她逼问", ending: "deathWell", delta: { suspicion: 4 } },
+    ],
+  },
+  yetingNight: {
+    chapter: 1,
+    speaker: "旁白",
+    location: "掖庭夜廊",
+    mood: "danger",
+    text: "夜里有人把郑昭仪宫中的香囊放进你被褥。巡夜女官的灯已经到了廊口。",
+    choices: [
+      { text: "不碰香囊，直接请巡夜女官查看被褥褶痕", next: "yetingSuperior", score: 2, delta: { wit: 1 } },
+      { text: "让云娘替你挡住巡夜女官片刻", next: "yetingSuperior", rescueFlag: "yunProtected", rescueScore: 2, fallbackEnding: "exile", rescueDelta: { ally: 1 } },
+      { text: "把香囊丢进井里", ending: "deathWell", delta: { suspicion: 4 } },
+    ],
+  },
+  yetingSuperior: {
+    chapter: 1,
+    speaker: "尚宫局女史",
+    location: "掖庭值房",
+    mood: "tense",
+    text: "女史抽查名册。她问你：异常名册，是拿去告状，还是先补证据？",
+    choices: [
+      { text: "封存原册，抄副本交尚宫局", next: "yetingEnd", score: 2, delta: { wit: 2, suspicion: -1 }, set: { ledgerCopy: true } },
+      { text: "托高内侍转交", next: "yetingEnd", rescueFlag: "eunuchTrust", rescueScore: 2, score: 1, delta: { ally: 1 }, set: { eunuchTrust: true } },
+      { text: "去郑昭仪宫门前喊冤", ending: "lake", delta: { suspicion: 4 } },
+    ],
+  },
+  yetingEnd: { chapter: 1, speaker: "尚宫局女史", location: "尚食局门前", mood: "calm", checkpoint: true },
+
+  kitchenStart: {
+    chapter: 2,
+    speaker: "裴淑妃",
+    location: "尚食局",
+    mood: "tense",
+    text: "{address}被临时调去尚食局。裴淑妃点名要莲子羹送往中宫，汤气里却混着辛烈药味。",
+    choices: [
+      { text: "请尚食令复验药材，自己守在旁边记名", next: "kitchenSpice", score: 2, delta: { wit: 1 } },
+      { text: "先用银针试，再偷偷倒掉", next: "kitchenSpice", score: 1, delta: { suspicion: 1 } },
+      { text: "照常端去", ending: "poison", delta: { favor: 1 } },
+    ],
+  },
+  kitchenSpice: {
+    chapter: 2,
+    speaker: "尚食婢素荷",
+    location: "药柜前",
+    mood: "tense",
+    text: "素荷被人推到药柜前，手上沾着乌头粉。她哭着说自己只是奉命取桂心。",
+    choices: [
+      { text: "先封药柜，再让她说取药牌是谁给的", next: "kitchenBlame", score: 2, delta: { wit: 1 }, set: { suheAlive: true } },
+      { text: "把她交给内侍省严审", next: "kitchenBlame", score: 1, delta: { suspicion: 1 } },
+      { text: "逼她立刻咬出郑昭仪", ending: "exile", delta: { suspicion: 4 } },
+    ],
+  },
+  kitchenBlame: {
+    chapter: 2,
+    speaker: "郑昭仪",
+    location: "尚食局外",
+    mood: "danger",
+    text: "郑昭仪的人指认你动过药罐。围观宫人越来越多，谁先慌，谁就像凶手。",
+    choices: [
+      { text: "核对药罐封泥、取药牌和名册调令", next: "kitchenFire", rescueFlag: "ledgerCopy", rescueScore: 2, score: 1, delta: { wit: 1 } },
+      { text: "请高内侍当众说明你入宫时的抄录差事", next: "kitchenFire", rescueFlag: "eunuchTrust", rescueScore: 2, fallbackEnding: "exile", rescueDelta: { ally: 1 } },
+      { text: "反咬郑昭仪是主谋", ending: "lake", delta: { suspicion: 4 } },
+    ],
+  },
+  kitchenFire: {
+    chapter: 2,
+    speaker: "旁白",
+    location: "尚食局灶间",
+    mood: "danger",
+    text: "证据刚封好，灶间忽然起火。锦儿趁乱撞向你，封泥盒滚到火边。",
+    choices: [
+      { text: "先救封泥盒，再叫人关灶门", next: "kitchenTaste", score: 2, delta: { wit: 1 } },
+      { text: "先拉住素荷逃出去", next: "kitchenTaste", score: 1, delta: { ally: 1 }, set: { suheGrateful: true } },
+      { text: "趁乱去追锦儿", ending: "lake", delta: { suspicion: 3 } },
+    ],
+  },
+  kitchenTaste: {
+    chapter: 2,
+    speaker: "中宫女官",
+    location: "中宫廊下",
+    mood: "calm",
+    text: "毒羹未入中宫。中宫女官问你：若此案牵连下等宫女，该杀一儆百，还是查到取药牌为止？",
+    choices: [
+      { text: "查到取药牌为止，不扩大株连", next: "kitchenMercy", score: 2, delta: { ally: 1 }, set: { queenTrust: true } },
+      { text: "严审所有碰过药柜的人", next: "kitchenMercy", score: 1, delta: { wit: 1, suspicion: 1 } },
+      { text: "请中宫立刻处死素荷", ending: "exile", delta: { suspicion: 4 } },
+    ],
+  },
+  kitchenMercy: {
+    chapter: 2,
+    speaker: "皇帝",
+    location: "尚食局前",
+    mood: "calm",
+    text: "皇帝听闻你止住毒羹，问你要什么赏。满院宫人都在看，你一句话会决定她们日后帮不帮你。",
+    choices: [
+      { text: "求继续查尚食局账册，洗清无辜宫人", next: "kitchenEnd", score: 2, delta: { favor: 1, wit: 1 } },
+      { text: "求赏银分给今日救火的宫人", next: "kitchenEnd", score: 2, delta: { ally: 1, favor: 1 } },
+      { text: "求皇帝今夜留宿", ending: "lake", delta: { favor: 1, suspicion: 4 } },
+    ],
+  },
+  kitchenEnd: { chapter: 2, speaker: "皇帝", location: "蓬莱殿外", mood: "calm", checkpoint: true },
+
+  banquetStart: {
+    chapter: 3,
+    speaker: "杨贵妃",
+    location: "蓬莱殿",
+    mood: "calm",
+    text: "{address}因毒案有功，被封才人。蓬莱殿夜宴，杨贵妃笑问：若有人借刀杀人，该先抓刀，还是先抓握刀的人？",
+    choices: [
+      { text: "先收刀为证，再看谁急着灭口", next: "banquetDress", score: 2, delta: { favor: 1, wit: 1 }, set: { yangInterest: true } },
+      { text: "先抓握刀的人", next: "banquetDress", score: 1, delta: { suspicion: 2 } },
+      { text: "说后宫之事不该女子多言", ending: "exile", delta: { favor: -1 } },
+    ],
+  },
+  banquetDress: {
+    chapter: 3,
+    speaker: "掌衣女官",
+    location: "更衣处",
+    mood: "tense",
+    text: "上宴前，你的披帛被换成犯中宫忌色的暗纹。掌衣女官只说：才人若不懂规矩，怪不得旁人。",
+    choices: [
+      { text: "换回素色披帛，把暗纹封存", next: "banquetWine", score: 2, delta: { wit: 1 } },
+      { text: "穿暗纹入席，赌皇帝看不出来", ending: "lake", delta: { suspicion: 4 } },
+      { text: "请杨贵妃借一条披帛", next: "banquetWine", rescueFlag: "yangInterest", rescueScore: 2, score: 1, delta: { ally: 1 } },
+    ],
+  },
+  banquetWine: {
+    chapter: 3,
+    speaker: "韦皇后",
+    location: "蓬莱殿",
+    mood: "danger",
+    text: "歌舞正盛，酒盏忽然换到你案前。皇后看着你，像是在看一枚棋子能不能自己站稳。",
+    choices: [
+      { text: "先敬皇后，再以药案未结婉拒烈酒", next: "banquetPoem", score: 2, delta: { ally: 1, suspicion: -1 }, set: { queenTrust: true } },
+      { text: "直接饮下", ending: "wine", delta: { favor: 1 } },
+      { text: "转敬杨贵妃，借她挡皇后", next: "banquetPoem", score: 1, delta: { ally: 1, suspicion: 2 } },
+    ],
+  },
+  banquetPoem: {
+    chapter: 3,
+    speaker: "裴淑妃",
+    location: "蓬莱殿",
+    mood: "tense",
+    text: "裴淑妃忽然让你以宫灯为题作句。她不是考才情，是要看你会不会抢妃嫔风头。",
+    choices: [
+      { text: "借灯赞中宫明照，不提自己", next: "banquetLetter", score: 2, delta: { wit: 1, ally: 1 } },
+      { text: "作一句锋利艳词，让皇帝记住你", next: "banquetLetter", score: 1, delta: { favor: 1, suspicion: 2 } },
+      { text: "推说不会，沉默到底", next: "banquetLetter", score: 0, delta: { favor: -1 } },
+    ],
+  },
+  banquetLetter: {
+    chapter: 3,
+    speaker: "高内侍",
+    location: "蓬莱殿后廊",
+    mood: "danger",
+    text: "高内侍递来半封外信，牵出禁军换防。若交错人，前面攒下的分寸都会变成罪证。",
+    choices: [
+      { text: "交给皇后，请她以中宫名义封存", next: "banquetGeneral", rescueFlag: "queenTrust", rescueScore: 2, score: 1, delta: { ally: 1 }, set: { sealedLetter: true } },
+      { text: "私藏外信，等皇帝独处时献上", next: "banquetGeneral", score: 1, delta: { favor: 1, suspicion: 1 }, set: { privateLetter: true } },
+      { text: "约薛将军夜里私谈", ending: "lake", delta: { suspicion: 5 } },
+    ],
+  },
+  banquetGeneral: {
+    chapter: 3,
+    speaker: "薛将军",
+    location: "蓬莱殿外",
+    mood: "tense",
+    text: "薛将军在殿外拦你，说换防文书并非他亲笔。你若信错人，私通禁军的罪名立刻坐实。",
+    choices: [
+      { text: "只问文书笔迹特征，不收他私物", next: "banquetEnd", score: 2, delta: { wit: 1 }, set: { generalClue: true } },
+      { text: "收下他的腰牌，留作证据", ending: "lake", delta: { suspicion: 5 } },
+      { text: "让高内侍隔帘听证", next: "banquetEnd", rescueFlag: "eunuchTrust", rescueScore: 2, score: 1, delta: { ally: 1 }, set: { generalClue: true } },
+    ],
+  },
+  banquetEnd: { chapter: 3, speaker: "皇帝", location: "紫宸殿", mood: "calm", checkpoint: true },
+
+  sealStart: {
+    chapter: 4,
+    speaker: "皇帝",
+    location: "紫宸殿",
+    mood: "tense",
+    text: "{address}晋为婕妤，被召入紫宸殿。皇帝问你为何能连破毒羹、外信两案。你不能说自己来自千年之后。",
+    choices: [
+      { text: "说自己只认账册、药牌、时辰三样死物", next: "sealLedger", score: 2, delta: { favor: 1, wit: 1 } },
+      { text: "说梦中神女指点", ending: "exile", delta: { suspicion: 5 } },
+      { text: "说都是郑昭仪所为，请立刻赐死", ending: "lake", delta: { suspicion: 4 } },
+    ],
+  },
+  sealLedger: {
+    chapter: 4,
+    speaker: "韦皇后",
+    location: "含元殿偏廊",
+    mood: "tense",
+    text: "皇后问你：若郑昭仪反咬你伪造名册，你拿什么证明第一笔证据不是后补的？",
+    choices: [
+      { text: "呈上入宫时登记玉佩的库簿页码，证明笔迹日期", next: "sealWitness", rescueFlag: "jadeRegistered", rescueScore: 2, fallbackEnding: "exile", rescueDelta: { wit: 1 } },
+      { text: "请高内侍证明你入宫第一日便抄录", next: "sealWitness", rescueFlag: "eunuchTrust", rescueScore: 2, fallbackEnding: "exile", rescueDelta: { ally: 1 } },
+      { text: "只说自己问心无愧", ending: "exile", delta: { suspicion: 3 } },
+    ],
+  },
+  sealWitness: {
+    chapter: 4,
+    speaker: "郑昭仪",
+    location: "含元殿",
+    mood: "danger",
+    text: "郑昭仪果然反咬你逼供下等宫女。她要传素荷，赌素荷怕死不敢说真话。",
+    choices: [
+      { text: "让素荷照取药牌说，不问主谋", next: "sealTrial", rescueFlag: "suheAlive", rescueScore: 2, score: 1, delta: { ally: 1 } },
+      { text: "让云娘先说明掖庭栽赃旧事", next: "sealTrial", rescueFlag: "yunProtected", rescueScore: 2, score: 1, delta: { ally: 1 } },
+      { text: "当殿威胁素荷若不说就同罪", ending: "exile", delta: { suspicion: 4 } },
+    ],
+  },
+  sealTrial: {
+    chapter: 4,
+    speaker: "韦皇后",
+    location: "含元殿",
+    mood: "danger",
+    text: "含元殿对质。郑昭仪反咬你勾结禁军、蛊惑帝心。皇后问：证据、证人、动机，先呈哪一个？",
+    choices: [
+      { text: "先呈名册、药牌、换防时辰，再传证人", next: "sealGeneral", score: 2, delta: { wit: 2 } },
+      { text: "先哭诉一路委屈，求皇帝信你", ending: "exile", delta: { favor: -1 } },
+      { text: "逼郑昭仪当众下跪认罪", ending: "lake", delta: { suspicion: 4 } },
+    ],
+  },
+  sealGeneral: {
+    chapter: 4,
+    speaker: "薛将军",
+    location: "含元殿",
+    mood: "tense",
+    text: "薛将军被传入殿。若他不能说明换防笔迹，禁军线会断，你也会被拖下水。",
+    choices: [
+      { text: "请他说出伪文书的三处笔锋差异", next: "sealMercy", rescueFlag: "generalClue", rescueScore: 2, fallbackEnding: "lake", rescueDelta: { wit: 1 } },
+      { text: "呈上私收的腰牌证明他与你相识", ending: "lake", delta: { suspicion: 5 } },
+      { text: "让高内侍复述蓬莱殿外隔帘听证", next: "sealMercy", rescueFlag: "eunuchTrust", rescueScore: 2, fallbackEnding: "lake", rescueDelta: { ally: 1 } },
+    ],
+  },
+  sealMercy: {
+    chapter: 4,
+    speaker: "郑昭仪",
+    location: "含元殿",
+    mood: "tense",
+    text: "郑昭仪伏罪，旧皇后病重交出凤印。满殿都在看你成为中宫后的第一道懿旨。",
+    choices: [
+      { text: "重整掖庭名册，禁私刑，立女官复核制度", next: "sealEnd", score: 2, delta: { ally: 2, favor: 1 } },
+      { text: "清算所有曾经轻慢你的人", ending: "exile", delta: { suspicion: 5 } },
+      { text: "废除所有妃嫔位分，只留自己", ending: "lake", delta: { suspicion: 5 } },
+    ],
+  },
+  sealEnd: { chapter: 4, speaker: "册礼官", location: "含元殿", mood: "win", checkpoint: true, final: true },
+};
+
+const state = {
+  playerName: "",
+  chapter: 0,
+  node: "gateStart",
+  step: 1,
+  chapterScore: 0,
+  favor: 0,
+  suspicion: 0,
+  wit: 0,
+  ally: 0,
+  flags: {},
+  ended: false,
+};
+
+const els = {
+  startScreen: document.getElementById("startScreen"),
+  nameForm: document.getElementById("nameForm"),
+  playerName: document.getElementById("playerName"),
+  continueGame: document.getElementById("continueGame"),
+  shell: document.querySelector(".stage"),
+  title: document.getElementById("chapterTitle"),
+  speaker: document.getElementById("speakerName"),
+  rank: document.getElementById("rankName"),
+  location: document.getElementById("locationName"),
+  address: document.getElementById("addressName"),
+  portrait: document.getElementById("portrait"),
+  turn: document.getElementById("turnCount"),
+  story: document.getElementById("storyText"),
+  choices: document.getElementById("choices"),
+  archive: document.getElementById("archiveText"),
+  musicToggle: document.getElementById("musicToggle"),
+};
+
+const music = {
+  enabled: false,
+  ctx: null,
+  timer: null,
+  mood: "calm",
+  gain: null,
+};
+
+function clamp(value) {
+  return Math.max(0, Math.min(10, value));
+}
+
+function currentChapter() {
+  return chapters[state.chapter];
+}
+
+function currentRank() {
+  if (state.ended && state.node === "__ending" && nodes.__ending?.rank) return nodes.__ending.rank;
+  return currentChapter().rank;
+}
+
+function playerAddress(rank = currentRank()) {
+  const name = state.playerName || "沈清辞";
+  if (rank.includes("皇后")) return `${name}皇后`;
+  return `${name}（${rank}）`;
+}
+
+function formatText(text) {
+  return text
+    .replaceAll("{name}", state.playerName || "沈清辞")
+    .replaceAll("{address}", playerAddress())
+    .replaceAll("{rank}", currentRank());
+}
+
+function applyDelta(delta = {}) {
+  for (const key of ["favor", "suspicion", "wit", "ally"]) {
+    state[key] = clamp(state[key] + (delta[key] || 0));
+  }
+}
+
+function applyFlags(flags = {}) {
+  Object.assign(state.flags, flags);
+}
+
+function choiceWorks(choice) {
+  return !choice.rescueFlag || Boolean(state.flags[choice.rescueFlag]);
+}
+
+function saveCheckpoint(nextChapter) {
+  localStorage.setItem(
+    SAVE_KEY,
+    JSON.stringify({
+      playerName: state.playerName,
+      chapter: nextChapter,
+      favor: state.favor,
+      suspicion: state.suspicion,
+      wit: state.wit,
+      ally: state.ally,
+      flags: state.flags,
+    })
+  );
+}
+
+function loadCheckpoint() {
+  try {
+    return JSON.parse(localStorage.getItem(SAVE_KEY));
+  } catch {
+    return null;
+  }
+}
+
+function hasSave() {
+  const save = loadCheckpoint();
+  return save && save.playerName && Number.isInteger(save.chapter);
+}
+
+function startGame(playerName, chapter = 0, savedStats = null) {
+  const safeName = (playerName || "沈清辞").trim().slice(0, 8) || "沈清辞";
+  Object.assign(state, {
+    playerName: safeName,
+    chapter,
+    node: chapters[chapter].start,
+    step: 1,
+    chapterScore: 0,
+    favor: savedStats?.favor || 0,
+    suspicion: savedStats?.suspicion || 0,
+    wit: savedStats?.wit || 0,
+    ally: savedStats?.ally || 0,
+    flags: { ...(savedStats?.flags || state.flags || {}) },
+    ended: false,
+  });
+  els.startScreen.classList.add("hidden");
+  renderNode();
+}
+
+function restartChapter() {
+  const save = loadCheckpoint();
+  if (save && save.playerName === state.playerName) {
+    startGame(save.playerName, Math.min(save.chapter, chapters.length - 1), save);
+    return;
+  }
+  startGame(state.playerName, 0, { flags: {} });
+}
+
+function hardRestart() {
+  localStorage.removeItem(SAVE_KEY);
+  Object.assign(state, {
+    playerName: "",
+    chapter: 0,
+    node: "gateStart",
+    step: 1,
+    chapterScore: 0,
+    favor: 0,
+    suspicion: 0,
+    wit: 0,
+    ally: 0,
+    flags: {},
+    ended: false,
+  });
+  els.playerName.value = "";
+  els.startScreen.classList.remove("hidden");
+  updateContinueButton();
+}
+
+function renderCourt() {
+  document.getElementById("courtList").innerHTML = court
+    .map(
+      (person) => `
+        <div class="person">
+          <div class="mini">${person.mark}</div>
+          <div><strong>${person.name}</strong><span>${person.role}</span></div>
+          <div class="relation">${person.relation}</div>
+        </div>
+      `
+    )
+    .join("");
+}
+
+function renderMap(activePlace) {
+  document.getElementById("mapGrid").innerHTML = places
+    .map(
+      (place) => `
+        <div class="place ${place.id === activePlace ? "active" : ""}">
+          <strong>${place.name}</strong>
+          <span>${place.note}</span>
+        </div>
+      `
+    )
+    .join("");
+}
+
+function renderMeters() {
+  for (const key of ["favor", "suspicion", "wit", "ally"]) {
+    document.getElementById(`${key}Value`).textContent = state[key];
+    document.getElementById(`${key}Bar`).style.width = `${state[key] * 10}%`;
+  }
+  document.getElementById("scoreValue").textContent = state.chapterScore;
+  document.getElementById("scoreBar").style.width = `${Math.min(100, (state.chapterScore / currentChapter().minScore) * 100)}%`;
+}
+
+function renderChapterTrack() {
+  document.getElementById("chapterTrack").innerHTML = chapters
+    .map((chapter, index) => {
+      const status = index < state.chapter ? "已存档" : index === state.chapter ? "当前" : "未开启";
+      return `
+        <div class="chapter-step ${index < state.chapter ? "done" : ""} ${index === state.chapter ? "active" : ""}">
+          <strong>${chapter.title}</strong>
+          <span>${chapter.rank} → ${chapter.promotion}</span>
+          <em>${status}</em>
+        </div>
+      `;
+    })
+    .join("");
+}
+
+function rankMark(rank) {
+  if (rank.includes("皇后")) return "后";
+  if (rank.includes("婕妤")) return "婕";
+  if (rank.includes("才人")) return "才";
+  if (rank.includes("女史")) return "史";
+  if (rank.includes("宫女")) return "宫";
+  return (state.playerName || "沈").slice(0, 1);
+}
+
+function checkpointText(node) {
+  const chapter = currentChapter();
+  if (state.chapterScore >= chapter.minScore) {
+    if (node.final) {
+      saveCheckpoint(chapters.length - 1);
+      return {
+        title: "终章：凤印归掌",
+        speaker: "册礼官",
+        rank: "皇后",
+        text: endings.win,
+        choices: [
+          { text: "重新开局", hardRestart: true },
+          { text: "停在皇后结局", reread: true },
+          { text: "从本章重试", restartChapter: true },
+        ],
+      };
+    }
+
+    const nextChapter = state.chapter + 1;
+    saveCheckpoint(nextChapter);
+    return {
+      title: "章末晋升",
+      speaker: "上级女官",
+      rank: chapter.promotion,
+      text: `${playerAddress(chapter.promotion)}本章章分 ${state.chapterScore}，达到晋升线 ${chapter.minScore}。上级满意，将你升为${chapter.promotion}。此处已自动存档，可以进入下一章。`,
+      choices: [
+        { text: `进入${chapters[nextChapter].title}`, nextChapter },
+        { text: "重读本章结尾", reread: true },
+        { text: "从存档处继续", loadSave: true },
+      ],
+    };
+  }
+
+  return {
+    title: "章末未晋升",
+    speaker: "上级女官",
+    rank: chapter.rank,
+    text: `${playerAddress(chapter.rank)}本章章分 ${state.chapterScore}，未达到晋升线 ${chapter.minScore}。上级说你能活，但还不够稳。没有存档，请重走本章。`,
+    choices: [
+      { text: "重试本章", retryCurrent: true },
+      { text: "重新开局", hardRestart: true },
+      { text: "查看晋升要求", reread: true },
+    ],
+  };
+}
+
+function renderNode() {
+  const rawNode = nodes[state.node];
+  const chapter = currentChapter();
+  const display = rawNode.checkpoint ? checkpointText(rawNode) : rawNode;
+  const rank = display.rank || chapter.rank;
+  const place = rawNode.place || chapter.place;
+
+  els.shell.classList.toggle("ending", state.ended);
+  els.shell.classList.toggle("checkpoint", Boolean(rawNode.checkpoint));
+  els.title.textContent = display.title || chapter.title;
+  els.speaker.textContent = display.speaker || rawNode.speaker;
+  els.rank.textContent = rank;
+  els.location.textContent = rawNode.location || chapter.summary;
+  els.address.textContent = playerAddress(rank);
+  els.portrait.textContent = rankMark(rank);
+  els.turn.textContent = state.ended ? "命簿已定" : rawNode.checkpoint ? "章末判定" : `第 ${state.step} 步`;
+  els.story.textContent = formatText(display.text || "");
+  els.archive.textContent = state.ended
+    ? "命簿已定。只能从最近章末存档或朱雀门重来。"
+    : rawNode.checkpoint
+      ? "章末才会自动存档；分数不够不会保存进度。"
+      : `本章目标：${chapter.summary} 晋升线 ${chapter.minScore} 分。`;
+  els.choices.innerHTML = display.choices
+    .map(
+      (choice, index) => `
+        <button class="choice" type="button" data-index="${index}">
+          ${choice.text}
+        </button>
+      `
+    )
+    .join("");
+  renderMeters();
+  renderMap(place);
+  renderChapterTrack();
+  setMusicMood(rawNode.mood || (rawNode.checkpoint ? "win" : "calm"));
+}
+
+function showEnding(key) {
+  nodes.__ending = {
+    chapter: state.chapter,
+    speaker: "命簿",
+    location: "命簿终页",
+    mood: key === "win" ? "win" : "danger",
+    rank: key === "win" ? "皇后" : currentChapter().rank,
+    title: key === "win" ? "终章：凤印归掌" : "结局：命簿断页",
+    text: endings[key],
+    choices: [
+      { text: "读取最近章末存档", loadSave: true },
+      { text: "重新开局", hardRestart: true },
+      { text: "停在结局", reread: true },
+    ],
+  };
+  state.node = "__ending";
+  state.ended = true;
+  renderNode();
+}
+
+function choose(index) {
+  const rawNode = nodes[state.node];
+  const display = rawNode.checkpoint ? checkpointText(rawNode) : rawNode;
+  const choice = display.choices[index];
+  if (!choice) return;
+
+  if (choice.hardRestart) return hardRestart();
+  if (choice.restartChapter) return restartChapter();
+  if (choice.retryCurrent) return startGame(state.playerName, state.chapter, state);
+  if (choice.loadSave) {
+    const save = loadCheckpoint();
+    if (save) return startGame(save.playerName, Math.min(save.chapter, chapters.length - 1), save);
+    return hardRestart();
+  }
+  if (Number.isInteger(choice.nextChapter)) return startGame(state.playerName, choice.nextChapter, state);
+  if (choice.reread || state.ended) return renderNode();
+
+  const works = choiceWorks(choice);
+  state.chapterScore += works ? choice.rescueScore || choice.score || 0 : choice.score || 0;
+  applyDelta(works ? { ...(choice.delta || {}), ...(choice.rescueDelta || {}) } : choice.delta);
+  applyFlags(choice.set);
+  state.step += 1;
+
+  if (!works && choice.rescueEnding) return showEnding(choice.rescueEnding);
+  if (!works && choice.fallbackEnding) return showEnding(choice.fallbackEnding);
+  if (choice.ending) return showEnding(choice.ending);
+
+  state.node = choice.next;
+  renderNode();
+}
+
+function updateContinueButton() {
+  const save = loadCheckpoint();
+  els.continueGame.disabled = !hasSave();
+  els.continueGame.textContent = save ? `读取：${save.playerName} 第${Math.min(save.chapter + 1, chapters.length)}章` : "暂无存档";
+}
+
+function setMusicMood(mood) {
+  music.mood = mood;
+  if (music.enabled) startMusic();
+}
+
+function startMusic() {
+  if (!music.ctx) {
+    music.ctx = new AudioContext();
+    music.gain = music.ctx.createGain();
+    music.gain.gain.value = 0.035;
+    music.gain.connect(music.ctx.destination);
+  }
+  if (music.ctx.state === "suspended") music.ctx.resume();
+  clearInterval(music.timer);
+  const patterns = {
+    calm: [392, 523, 587, 523, 440, 392],
+    tense: [330, 349, 392, 349, 330, 294],
+    danger: [220, 233, 196, 185, 196, 233],
+    win: [392, 494, 587, 784, 659, 587],
+  };
+  let beat = 0;
+  const play = () => {
+    const now = music.ctx.currentTime;
+    const freq = patterns[music.mood][beat % patterns[music.mood].length];
+    const osc = music.ctx.createOscillator();
+    const gain = music.ctx.createGain();
+    osc.type = music.mood === "danger" ? "sawtooth" : "sine";
+    osc.frequency.value = freq;
+    gain.gain.setValueAtTime(0, now);
+    gain.gain.linearRampToValueAtTime(0.75, now + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + (music.mood === "win" ? 0.55 : 0.38));
+    osc.connect(gain);
+    gain.connect(music.gain);
+    osc.start(now);
+    osc.stop(now + 0.65);
+    beat += 1;
+  };
+  play();
+  music.timer = setInterval(play, music.mood === "tense" || music.mood === "danger" ? 360 : 520);
+}
+
+function toggleMusic() {
+  music.enabled = !music.enabled;
+  els.musicToggle.textContent = music.enabled ? "乐声：开" : "乐声：关";
+  if (music.enabled) {
+    startMusic();
+  } else {
+    clearInterval(music.timer);
+    if (music.ctx) music.ctx.suspend();
+  }
+}
+
+els.nameForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+  startGame(els.playerName.value, 0, { flags: {} });
+});
+
+els.continueGame.addEventListener("click", () => {
+  const save = loadCheckpoint();
+  if (save) startGame(save.playerName, Math.min(save.chapter, chapters.length - 1), save);
+});
+
+els.choices.addEventListener("click", (event) => {
+  const button = event.target.closest(".choice");
+  if (!button) return;
+  choose(Number(button.dataset.index));
+});
+
+document.getElementById("restartTop").addEventListener("click", hardRestart);
+document.getElementById("restartBottom").addEventListener("click", restartChapter);
+els.musicToggle.addEventListener("click", toggleMusic);
+
+renderCourt();
+updateContinueButton();
