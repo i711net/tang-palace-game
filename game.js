@@ -1,5 +1,5 @@
 const SAVE_KEY = "fengque-changan-save-v3";
-const ASSET_VERSION = "20260623-music2";
+const ASSET_VERSION = "20260623-ending1";
 
 const court = [
   { name: "韦皇后", role: "中宫", relation: "审视", mark: "后" },
@@ -118,16 +118,16 @@ const defaultMusicConfig = {
 };
 
 const endings = {
-  deathGate: { title: "结局：宫门未开", rank: "宫外民女", text: "你在朱雀门外自称能预知天命。妖言的罪名来得比雨更快，天亮前，你的名字没有写进宫籍。" },
-  deathSearch: { title: "结局：私物入罪", rank: "宫外民女", text: "你把青玉佩藏进发髻，验身宫人当场搜出。内廷最忌私藏，你还没入宫，命簿已经合上。" },
-  deathWell: { title: "结局：井边断声", text: "你在井边逼问旧宫女，惊动了郑昭仪的人。第二日，掖庭只说有人夜里失足。" },
-  poison: { title: "结局：一盏冷羹", text: "你把莲子羹照常送去中宫。羹里藏着乌头，罪名也早备好了。" },
-  exile: { title: "结局：青灯冷宫", text: "你把一时宠眷当护身符，却没有证据也没有盟友。圣眷散后，冷宫青灯替你数余生。" },
-  lake: { title: "结局：曲江沉月", text: "你当众锋芒太露，证据太薄。夜里有人说你失足落水，宫灯照到湖面时，已经没人再问真相。" },
-  wine: { title: "结局：宴上失仪", text: "你饮下那杯换过的酒。毒并不烈，只够让你在众人面前失仪。从此恩宠与前程都成笑话。" },
-  win: { title: "终章：凤印归掌", rank: "皇后", text: "含元殿钟鼓齐鸣。你用证据、盟友和时机把一盘死棋走活。凤印落掌，长安雪停。" },
-  officialPower: { title: "终章：女官执令", rank: "女官令", text: "你没有接凤印，而是请立女官院，重整掖庭、尚食、尚宫三司。你不坐中宫，却让六宫规矩从此绕不开你的名字。" },
-  consortAlly: { title: "终章：贵妃同盟", rank: "贵妃", text: "你接受杨贵妃递来的盟约，不急着争后位，而是先掌宴饮、赏赐和消息。六宫都知道，新贵妃笑时，风向已经变了。" },
+  deathGate: { type: "bad", banner: "入宫失败", title: "结局：宫门未开", rank: "宫外民女", text: "你在朱雀门外自称能预知天命。妖言的罪名来得比雨更快，天亮前，你的名字没有写进宫籍。", you: "你没有踏进宫门，名字只在验籍簿边角留下淡淡一笔。", allies: "还未与你结缘的人，仍在宫墙内各自沉浮。", court: "宫门照旧开合，长安雨夜吞没了这场短暂的穿越。" },
+  deathSearch: { type: "bad", banner: "入宫失败", title: "结局：私物入罪", rank: "宫外民女", text: "你把青玉佩藏进发髻，验身宫人当场搜出。内廷最忌私藏，你还没入宫，命簿已经合上。", you: "你被当作私藏禁物之人处置，尚未分配宫职便断了前路。", allies: "云娘想替你说一句话，却被女官喝退，从此更加懂得沉默。", court: "青玉佩被封入库房，后来成了旁人栽赃时反复提起的旧案。" },
+  deathWell: { type: "bad", banner: "暗线断绝", title: "结局：井边断声", text: "你在井边逼问旧宫女，惊动了郑昭仪的人。第二日，掖庭只说有人夜里失足。", you: "你的线索断在井边，连申辩的机会都没有留下。", allies: "知道内情的人从此不敢再说话，阿蘅旧案被重新压回尘土里。", court: "郑昭仪少了一个隐患，掖庭夜巡却比从前更森严。" },
+  poison: { type: "bad", banner: "毒局失守", title: "结局：一盏冷羹", text: "你把莲子羹照常送去中宫。羹里藏着乌头，罪名也早备好了。", you: "你成了尚食局毒案的替罪人，所有证据都被人提前摆成了死局。", allies: "素荷被迫闭口，与你有过好意的人也只能自保。", court: "中宫借此清洗尚食局，真正下毒的人退入更深的帘影。" },
+  exile: { type: "other", banner: "前程止步", title: "结局：青灯冷宫", text: "你把一时宠眷当护身符，却没有证据也没有盟友。圣眷散后，冷宫青灯替你数余生。", you: "你活了下来，却被困在冷宫旧院，日日抄经换一盏灯油。", allies: "曾帮过你的人不敢再来，只能偶尔托人送一件旧衣。", court: "六宫很快有了新的风波，你的名字成了新人入宫时的警示。" },
+  lake: { type: "bad", banner: "锋芒反噬", title: "结局：曲江沉月", text: "你当众锋芒太露，证据太薄。夜里有人说你失足落水，宫灯照到湖面时，已经没人再问真相。", you: "你把局势逼得太急，却没有给自己留下退路。", allies: "少数想救你的人被调离内廷，云娘若还在，也只能把你的名字藏在心里。", court: "湖面恢复平静，宫里的人学会了少看、少问、少记。" },
+  wine: { type: "other", banner: "宠眷尽失", title: "结局：宴上失仪", text: "你饮下那杯换过的酒。毒并不烈，只够让你在众人面前失仪。从此恩宠与前程都成笑话。", you: "你没有死，却再也进不了真正的权力中心。", allies: "杨贵妃收回试探的目光，皇后也不再把你当可用之人。", court: "蓬莱夜宴之后，众人都知道有些局不杀人，只毁人。" },
+  win: { type: "good", banner: "恭喜通关", title: "终章：凤印归掌", rank: "皇后", text: "含元殿钟鼓齐鸣。你用证据、盟友和时机把一盘死棋走活。凤印落掌，长安雪停。", you: "你从宫女走到中宫，掌凤印，定六宫，终于不必再靠旁人的脸色活命。", allies: "云娘入尚宫局，素荷重回尚食局清账，高内侍也因护证有功得以全身而退。", court: "郑昭仪一党伏法，旧案重审，掖庭第一次有人敢把冤名写成白纸黑字。" },
+  officialPower: { type: "good", banner: "恭喜达成隐藏结局", title: "终章：女官执令", rank: "女官令", text: "你没有接凤印，而是请立女官院，重整掖庭、尚食、尚宫三司。你不坐中宫，却让六宫规矩从此绕不开你的名字。", you: "你放下后位，换来真正能改宫规的权柄。", allies: "曾被你救下的人被分入各司，成为新女官院的第一批见证者。", court: "后宫仍有争斗，但账册、药牌、名籍从此不再只听妃嫔一句话。" },
+  consortAlly: { type: "good", banner: "恭喜达成同盟结局", title: "终章：贵妃同盟", rank: "贵妃", text: "你接受杨贵妃递来的盟约，不急着争后位，而是先掌宴饮、赏赐和消息。六宫都知道，新贵妃笑时，风向已经变了。", you: "你没有立刻登上后位，却拿到了更灵活的生路和权势。", allies: "杨贵妃与你共分六宫消息，高内侍替你守住内廷往来。", court: "皇后之位暂悬，长安的每一场宴饮都变成新的棋局。" },
 };
 
 const nodes = {
@@ -918,6 +918,15 @@ function playerAddress(rank = currentRank()) {
   return `${name}（${rank}）`;
 }
 
+function escapeHtml(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#39;");
+}
+
 function formatText(text) {
   if (Array.isArray(text)) {
     const match = text.find((item) => !item.if || Boolean(state.flags[item.if]));
@@ -966,6 +975,38 @@ function resolveChoices(choices = []) {
 function resolveRescueText(choice) {
   if (!choice.rescueText || !choiceWorks(choice)) return null;
   return formatText(choice.rescueText);
+}
+
+function endingHtml(ending, storyText) {
+  const type = ending.type || "bad";
+  const name = state.playerName || "沈清辞";
+  const banner = ending.banner || (type === "good" ? "恭喜通关" : type === "other" ? "其他结局" : "结局已定");
+  const summary = [
+    { label: "你的结局", body: ending.you || storyText },
+    { label: "与你有关的人", body: ending.allies || "与你有过交集的人，各自被这场风波推向新的命运。" },
+    { label: "宫中余波", body: ending.court || "宫墙深处很快恢复平静，只留下命簿上的一行后果。" },
+  ];
+
+  return `
+    <article class="ending-card ending-${type}">
+      <p class="ending-kicker">${escapeHtml(banner)}</p>
+      <h2>${escapeHtml(ending.title || "结局")}</h2>
+      <p class="ending-name">${escapeHtml(name)} · ${escapeHtml(ending.rank || currentRank())}</p>
+      <p class="ending-lead">${escapeHtml(storyText)}</p>
+      <div class="ending-summary">
+        ${summary
+          .map(
+            (item) => `
+              <section>
+                <strong>${escapeHtml(item.label)}</strong>
+                <p>${escapeHtml(formatText(item.body))}</p>
+              </section>
+            `
+          )
+          .join("")}
+      </div>
+    </article>
+  `;
 }
 
 function saveCheckpoint(nextChapter) {
@@ -1159,10 +1200,8 @@ function checkpointText(node) {
     if (node.final) {
       saveCheckpoint(chapters.length - 1);
       return {
-        title: "终章：凤印归掌",
+        ...endings.win,
         speaker: "册礼官",
-        rank: "皇后",
-        text: endings.win.text,
         choices: [
           { text: "重新开局", hardRestart: true },
           { text: "停在皇后结局", reread: true },
@@ -1206,19 +1245,24 @@ function renderNode() {
   const rank = display.rank || chapter.rank;
   const place = rawNode.place || chapter.place;
   const storyText = [state.pendingText, formatText(display.text || "")].filter(Boolean).join("\n\n");
+  const isEndingView = state.ended || Boolean(rawNode.final && display.type);
 
-  els.shell.classList.toggle("ending", state.ended);
-  els.shell.classList.toggle("checkpoint", Boolean(rawNode.checkpoint));
+  els.shell.classList.toggle("ending", isEndingView);
+  els.shell.classList.toggle("checkpoint", Boolean(rawNode.checkpoint) && !isEndingView);
   els.title.textContent = display.title || chapter.title;
   els.speaker.textContent = display.speaker || rawNode.speaker;
   els.rank.textContent = rank;
   els.location.textContent = rawNode.location || chapter.summary;
   els.address.textContent = playerAddress(rank);
   els.portrait.textContent = rankMark(rank);
-  els.turn.textContent = state.ended ? "命簿已定" : rawNode.checkpoint ? "章末判定" : `第 ${state.step} 步`;
-  els.story.textContent = storyText;
+  els.turn.textContent = isEndingView ? "命簿已定" : rawNode.checkpoint ? "章末判定" : `第 ${state.step} 步`;
+  if (isEndingView) {
+    els.story.innerHTML = endingHtml(display, storyText);
+  } else {
+    els.story.textContent = storyText;
+  }
   state.pendingText = "";
-  els.archive.textContent = state.ended
+  els.archive.textContent = isEndingView
     ? "命簿已定。只能从最近章末存档或朱雀门重来。"
     : rawNode.checkpoint
       ? "章末才会自动存档；分数不够不会保存进度。"
@@ -1249,8 +1293,13 @@ function showEnding(key) {
     location: "命簿终页",
     mood: key === "win" || key === "officialPower" || key === "consortAlly" ? "win" : "sad",
     rank: ending.rank || currentChapter().rank,
+    type: ending.type || "bad",
+    banner: ending.banner,
     title: ending.title,
     text: ending.text,
+    you: ending.you,
+    allies: ending.allies,
+    court: ending.court,
     choices: [
       { text: "读取最近章末存档", loadSave: true },
       { text: "重新开局", hardRestart: true },
