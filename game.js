@@ -188,10 +188,13 @@ const nodes = {
     speaker: "旁白",
     location: "朱雀门廊",
     mood: "danger",
-    text: "半夜点名，一个新婢怀中掉出外信。众人惊慌，锦儿忽然说，白日见你和她说过话。",
+    text: [
+      { if: "yunAlly", value: "半夜点名，一个新婢怀中掉出外信。众人惊慌，锦儿刚要攀咬你，云娘已经先抬头看向女官。" },
+      { value: "半夜点名，一个新婢怀中掉出外信。众人惊慌，锦儿忽然说，白日见你和她说过话。" },
+    ],
     choices: [
       { text: "先请女官验信封泥，再说自己只在点名时见过她", next: "gateBadge", score: 2, delta: { wit: 1 } },
-      { text: "看向云娘，请她替你作证", next: "gateBadge", rescueFlag: "yunAlly", rescueScore: 2, rescueDelta: { ally: 1 }, fallbackEnding: "exile" },
+      { text: "看向云娘，请她替你作证", next: "gateBadge", showIf: "yunAlly", rescueFlag: "yunAlly", rescueScore: 2, rescueDelta: { ally: 1 }, fallbackEnding: "exile", rescueText: "云娘拖着伤脚走出来，说你整夜睡在门边，根本没近过那新婢。锦儿脸色一白，外信的火暂时烧不到你身上。" },
       { text: "替那新婢把信藏进袖中", ending: "exile", delta: { suspicion: 5 } },
       { text: "说锦儿最先看见外信，应由她说明", next: "gateBadge", score: 1, delta: { wit: 1, suspicion: 1 } },
     ],
@@ -359,10 +362,13 @@ const nodes = {
     speaker: "旁白",
     location: "掖庭夜廊",
     mood: "danger",
-    text: "夜里有人把郑昭仪宫中的香囊放进你被褥。巡夜女官的灯已经到了廊口。",
+    text: [
+      { if: "yunProtected", value: "夜里有人把郑昭仪宫中的香囊放进你被褥。云娘从隔铺惊醒，一眼认出那香粉不是你常碰的东西；巡夜女官的灯已经到了廊口。" },
+      { value: "夜里有人把郑昭仪宫中的香囊放进你被褥。巡夜女官的灯已经到了廊口。" },
+    ],
     choices: [
       { text: "不碰香囊，直接请巡夜女官查看被褥褶痕", next: "yetingSuperior", score: 2, delta: { wit: 1 } },
-      { text: "让云娘替你挡住巡夜女官片刻", next: "yetingSuperior", rescueFlag: "yunProtected", rescueScore: 2, fallbackEnding: "exile", rescueDelta: { ally: 1 } },
+      { text: "让云娘替你挡住巡夜女官片刻", next: "yetingSuperior", showIf: "yunProtected", rescueFlag: "yunProtected", rescueScore: 2, fallbackEnding: "exile", rescueDelta: { ally: 1 }, rescueText: "云娘咳了一声，故意打翻水盆。巡夜女官低头看水迹，你趁这一息请她查看被褥褶痕，香囊的来路反成疑点。" },
       { text: "把香囊丢进井里", ending: "deathWell", delta: { suspicion: 4 } },
       { text: "把香囊放到锦儿被褥里", ending: "exile", delta: { suspicion: 5 } },
     ],
@@ -439,10 +445,14 @@ const nodes = {
     speaker: "郑昭仪",
     location: "尚食局外",
     mood: "danger",
-    text: "郑昭仪的人指认你动过药罐。围观宫人越来越多，谁先慌，谁就像凶手。",
+    text: [
+      { if: "ledgerCopy", value: "郑昭仪的人指认你动过药罐。你想起掖庭封存过的调令副本，药罐、名册、取药牌终于能连成一条线。" },
+      { if: "eunuchTrust", value: "郑昭仪的人指认你动过药罐。高内侍站在人群边，没有说话，却明显等你给他一个能开口的由头。" },
+      { value: "郑昭仪的人指认你动过药罐。围观宫人越来越多，谁先慌，谁就像凶手。" },
+    ],
     choices: [
-      { text: "核对药罐封泥、取药牌和名册调令", next: "kitchenTray", rescueFlag: "ledgerCopy", rescueScore: 2, score: 1, delta: { wit: 1 } },
-      { text: "请高内侍当众说明你入宫时的抄录差事", next: "kitchenTray", rescueFlag: "eunuchTrust", rescueScore: 2, fallbackEnding: "exile", rescueDelta: { ally: 1 } },
+      { text: "核对药罐封泥、取药牌和名册调令", next: "kitchenTray", rescueFlag: "ledgerCopy", rescueScore: 2, score: 1, delta: { wit: 1 }, rescueText: "你呈出副本页码，尚食令按时辰一对，郑昭仪宫中夜取名册的痕迹浮了出来。原本指向你的手，转向了药柜。" },
+      { text: "请高内侍当众说明你入宫时的抄录差事", next: "kitchenTray", showIf: "eunuchTrust", rescueFlag: "eunuchTrust", rescueScore: 2, fallbackEnding: "exile", rescueDelta: { ally: 1 }, rescueText: "高内侍终于开口，说你入宫第一夜就在他眼皮底下誊名册。人群静了一瞬，栽赃的人失了先声。" },
       { text: "反咬郑昭仪是主谋", ending: "lake", delta: { suspicion: 4 } },
       { text: "跪下认错求宽限", next: "kitchenTray", score: 0, delta: { suspicion: 2 } },
     ],
@@ -649,12 +659,16 @@ const nodes = {
     speaker: "郑昭仪",
     location: "蓬莱殿",
     mood: "danger",
-    text: "郑昭仪说自己少了一只金耳坠，目光落到你袖口。那耳坠若从你身上搜出，你就是偷盗贵人之物。",
+    text: [
+      { if: "yangGiftRegistered", value: "郑昭仪说自己少了一只金耳坠，目光落到你袖口。你想起杨贵妃香囊已经登记在册，袖中物件有据可查。" },
+      { if: "queenTrust", value: "郑昭仪说自己少了一只金耳坠，目光落到你袖口。皇后宫人站在你身后，像是在等一个合规搜席的理由。" },
+      { value: "郑昭仪说自己少了一只金耳坠，目光落到你袖口。那耳坠若从你身上搜出，你就是偷盗贵人之物。" },
+    ],
     choices: [
       { text: "让她搜，证明清白", ending: "exile", delta: { suspicion: 4 } },
-      { text: "请皇后宫人先封住四周，再搜所有席位", next: "banquetGeneral", rescueFlag: "queenTrust", rescueScore: 2, score: 1, rescueDelta: { ally: 1 } },
+      { text: "请皇后宫人先封住四周，再搜所有席位", next: "banquetGeneral", showIf: "queenTrust", rescueFlag: "queenTrust", rescueScore: 2, score: 1, rescueDelta: { ally: 1 }, rescueText: "皇后宫人立刻封席，金耳坠竟从郑昭仪近侍袖中滚出。你没有洗清自己，是让规矩替你洗清。" },
       { text: "反问她为何盯着你袖口", next: "banquetGeneral", score: 0, delta: { suspicion: 2 } },
-      { text: "借杨贵妃香囊登记，证明自己袖中无物", next: "banquetGeneral", rescueFlag: "yangGiftRegistered", rescueScore: 2, score: 1, rescueDelta: { wit: 1 } },
+      { text: "借杨贵妃香囊登记，证明自己袖中无物", next: "banquetGeneral", showIf: "yangGiftRegistered", rescueFlag: "yangGiftRegistered", rescueScore: 2, score: 1, rescueDelta: { wit: 1 }, rescueText: "掌衣女官取来登记册，香囊、封绳、时辰都对得上。杨贵妃轻轻一笑，郑昭仪这局反倒显得急了。" },
     ],
   },
   banquetGeneral: {
@@ -703,12 +717,16 @@ const nodes = {
     speaker: "韦皇后",
     location: "含元殿偏廊",
     mood: "tense",
-    text: "皇后问你：若郑昭仪反咬你伪造名册，你拿什么证明第一笔证据不是后补的？",
+    text: [
+      { if: "jadeRegistered", value: "皇后问你：若郑昭仪反咬你伪造名册，你拿什么证明第一笔证据不是后补的？你知道朱雀门那枚玉佩库簿，终于能派上用场。" },
+      { if: "badgeMarked", value: "皇后问你：若郑昭仪反咬你伪造名册，你拿什么证明第一笔证据不是后补的？你想起那枚裂牌曾被管事记在名册旁。" },
+      { value: "皇后问你：若郑昭仪反咬你伪造名册，你拿什么证明第一笔证据不是后补的？" },
+    ],
     choices: [
-      { text: "呈上入宫时登记玉佩的库簿页码，证明笔迹日期", next: "sealCloud", rescueFlag: "jadeRegistered", rescueScore: 2, fallbackEnding: "exile", rescueDelta: { wit: 1 } },
-      { text: "请高内侍证明你入宫第一日便抄录", next: "sealCloud", rescueFlag: "eunuchTrust", rescueScore: 2, fallbackEnding: "exile", rescueDelta: { ally: 1 } },
+      { text: "呈上入宫时登记玉佩的库簿页码，证明笔迹日期", next: "sealCloud", rescueFlag: "jadeRegistered", rescueScore: 2, fallbackEnding: "exile", rescueDelta: { wit: 1 }, rescueText: "库簿翻开，玉佩登记与名册笔迹在同一夜。那枚曾险些害你入罪的旧物，反过来替你钉住了时间。" },
+      { text: "请高内侍证明你入宫第一日便抄录", next: "sealCloud", rescueFlag: "eunuchTrust", rescueScore: 2, fallbackEnding: "exile", rescueDelta: { ally: 1 }, rescueText: "高内侍出列，只说一句：此女第一夜在奴婢眼前誊册。宫中话不必多，够用就好。" },
       { text: "只说自己问心无愧", ending: "exile", delta: { suspicion: 3 } },
-      { text: "呈上裂牌登记，说明当夜值守位置", next: "sealCloud", rescueFlag: "badgeMarked", rescueScore: 2, score: 1, rescueDelta: { wit: 1 } },
+      { text: "呈上裂牌登记，说明当夜值守位置", next: "sealCloud", rescueFlag: "badgeMarked", rescueScore: 2, score: 1, rescueDelta: { wit: 1 }, rescueText: "裂牌登记从旧册里找出，值守位置、时辰、笔迹互相咬合。锦儿当日的小手段，成了今日的大证据。" },
     ],
   },
   sealCloud: {
@@ -731,10 +749,10 @@ const nodes = {
     mood: "danger",
     text: "郑昭仪果然反咬你逼供下等宫女。她要传素荷，赌素荷怕死不敢说真话。",
     choices: [
-      { text: "让素荷照取药牌说，不问主谋", next: "sealAheng", rescueFlag: "suheAlive", rescueScore: 2, score: 1, delta: { ally: 1 } },
-      { text: "让云娘先说明掖庭栽赃旧事", next: "sealAheng", rescueFlag: "yunProtected", rescueScore: 2, score: 1, delta: { ally: 1 } },
+      { text: "让素荷照取药牌说，不问主谋", next: "sealAheng", showIf: "suheAlive", rescueFlag: "suheAlive", rescueScore: 2, score: 1, delta: { ally: 1 }, rescueText: "素荷颤着声音说出取药牌的来路，只说事实，不攀主谋。她活下来那日欠你的人情，今日终于还上。" },
+      { text: "让云娘先说明掖庭栽赃旧事", next: "sealAheng", showIf: "yunProtected", rescueFlag: "yunProtected", rescueScore: 2, score: 1, delta: { ally: 1 }, rescueText: "云娘把香粉、绣带、夜巡的事一件件说清。她不是大人物，却能证明你的敌人从掖庭时就开始织网。" },
       { text: "当殿威胁素荷若不说就同罪", ending: "exile", delta: { suspicion: 4 } },
-      { text: "只呈取药牌，不传证人", next: "sealAheng", rescueFlag: "drugTag", rescueScore: 2, score: 1, rescueDelta: { wit: 1 } },
+      { text: "只呈取药牌，不传证人", next: "sealAheng", showIf: "drugTag", rescueFlag: "drugTag", rescueScore: 2, score: 1, rescueDelta: { wit: 1 }, rescueText: "烧焦的取药牌被湿帕裹着呈上，灰痕还在。死物不会害怕，也不会改口。" },
     ],
   },
   sealAheng: {
@@ -824,6 +842,7 @@ const state = {
   node: "gateStart",
   step: 1,
   chapterScore: 0,
+  pendingText: "",
   favor: 0,
   suspicion: 0,
   wit: 0,
@@ -883,6 +902,10 @@ function playerAddress(rank = currentRank()) {
 }
 
 function formatText(text) {
+  if (Array.isArray(text)) {
+    const match = text.find((item) => !item.if || Boolean(state.flags[item.if]));
+    return formatText(match?.value || "");
+  }
   return text
     .replaceAll("{name}", state.playerName || "沈清辞")
     .replaceAll("{address}", playerAddress())
@@ -901,6 +924,31 @@ function applyFlags(flags = {}) {
 
 function choiceWorks(choice) {
   return !choice.rescueFlag || Boolean(state.flags[choice.rescueFlag]);
+}
+
+function resolveChoices(choices = []) {
+  const resolved = choices
+    .filter((choice) => !choice.showIf || Boolean(state.flags[choice.showIf]))
+    .map((choice) => {
+      if (!choice.variants) return choice;
+      const variant = choice.variants.find((item) => !item.if || Boolean(state.flags[item.if]));
+      return { ...choice, ...(variant?.patch || {}) };
+    });
+  const fillers = [
+    { text: "先沉默片刻，观察众人反应", score: 0, delta: { wit: 1 }, next: null },
+    { text: "按宫规请求上级复核", score: 1, delta: { wit: 1 }, next: null },
+    { text: "暂且避开锋芒，不在此刻争辩", score: 0, delta: { suspicion: -1 }, next: null },
+  ];
+  while (resolved.length < 4) {
+    const filler = { ...fillers[resolved.length % fillers.length], next: resolved[0]?.next };
+    resolved.push(filler);
+  }
+  return resolved.slice(0, 4);
+}
+
+function resolveRescueText(choice) {
+  if (!choice.rescueText || !choiceWorks(choice)) return null;
+  return formatText(choice.rescueText);
 }
 
 function saveCheckpoint(nextChapter) {
@@ -939,6 +987,7 @@ function startGame(playerName, chapter = 0, savedStats = null) {
     node: chapters[chapter].start,
     step: 1,
     chapterScore: 0,
+    pendingText: "",
     favor: savedStats?.favor || 0,
     suspicion: savedStats?.suspicion || 0,
     wit: savedStats?.wit || 0,
@@ -968,6 +1017,7 @@ function hardRestart() {
     node: "gateStart",
     step: 1,
     chapterScore: 0,
+    pendingText: "",
     favor: 0,
     suspicion: 0,
     wit: 0,
@@ -1138,6 +1188,7 @@ function renderNode() {
   const display = rawNode.checkpoint ? checkpointText(rawNode) : rawNode;
   const rank = display.rank || chapter.rank;
   const place = rawNode.place || chapter.place;
+  const storyText = [state.pendingText, formatText(display.text || "")].filter(Boolean).join("\n\n");
 
   els.shell.classList.toggle("ending", state.ended);
   els.shell.classList.toggle("checkpoint", Boolean(rawNode.checkpoint));
@@ -1148,13 +1199,14 @@ function renderNode() {
   els.address.textContent = playerAddress(rank);
   els.portrait.textContent = rankMark(rank);
   els.turn.textContent = state.ended ? "命簿已定" : rawNode.checkpoint ? "章末判定" : `第 ${state.step} 步`;
-  els.story.textContent = formatText(display.text || "");
+  els.story.textContent = storyText;
+  state.pendingText = "";
   els.archive.textContent = state.ended
     ? "命簿已定。只能从最近章末存档或朱雀门重来。"
     : rawNode.checkpoint
       ? "章末才会自动存档；分数不够不会保存进度。"
       : `本章目标：${chapter.summary} 晋升线 ${chapter.minScore} 分。`;
-  state.visibleChoices = orderedChoices(display.choices, state.node);
+  state.visibleChoices = orderedChoices(resolveChoices(display.choices), state.node);
   els.choices.innerHTML = state.visibleChoices
     .map(
       (choice, index) => `
@@ -1196,7 +1248,7 @@ function showEnding(key) {
 function choose(index) {
   const rawNode = nodes[state.node];
   const display = rawNode.checkpoint ? checkpointText(rawNode) : rawNode;
-  const choice = state.visibleChoices[index] || display.choices[index];
+  const choice = state.visibleChoices[index] || resolveChoices(display.choices)[index];
   if (!choice) return;
 
   if (choice.hardRestart) return hardRestart();
@@ -1211,6 +1263,7 @@ function choose(index) {
   if (choice.reread || state.ended) return renderNode();
 
   const works = choiceWorks(choice);
+  const rescueText = resolveRescueText(choice);
   state.chapterScore += works ? choice.rescueScore || choice.score || 0 : choice.score || 0;
   applyDelta(works ? { ...(choice.delta || {}), ...(choice.rescueDelta || {}) } : choice.delta);
   applyFlags(choice.set);
@@ -1221,6 +1274,7 @@ function choose(index) {
   if (choice.ending) return showEnding(choice.ending);
 
   state.node = choice.next;
+  if (rescueText) state.pendingText = rescueText;
   renderNode();
 }
 
