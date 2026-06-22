@@ -1,5 +1,5 @@
 const SAVE_KEY = "fengque-changan-save-v3";
-const ASSET_VERSION = "20260623-ending1";
+const ASSET_VERSION = "20260623-queenplot1";
 
 const court = [
   { name: "韦皇后", role: "中宫", relation: "审视", mark: "后" },
@@ -58,7 +58,7 @@ const chapters = [
     promotion: "婕妤",
     minScore: 14,
     place: "penglai",
-    summary: "在妃嫔席间答话、结盟、避锋芒。",
+    summary: "在妃嫔席间答话、结盟、避锋芒，也让皇帝真正记住你的分寸。",
   },
   {
     id: "seal",
@@ -68,7 +68,7 @@ const chapters = [
     promotion: "皇后",
     minScore: 14,
     place: "hanyuan",
-    summary: "含元殿对质，前面埋下的善缘会决定你有没有退路。",
+    summary: "含元殿对质，皇后杀局压顶，前面埋下的善缘会决定你有没有退路。",
   },
 ];
 
@@ -122,10 +122,11 @@ const endings = {
   deathSearch: { type: "bad", banner: "入宫失败", title: "结局：私物入罪", rank: "宫外民女", text: "你把青玉佩藏进发髻，验身宫人当场搜出。内廷最忌私藏，你还没入宫，命簿已经合上。", you: "你被当作私藏禁物之人处置，尚未分配宫职便断了前路。", allies: "云娘想替你说一句话，却被女官喝退，从此更加懂得沉默。", court: "青玉佩被封入库房，后来成了旁人栽赃时反复提起的旧案。" },
   deathWell: { type: "bad", banner: "暗线断绝", title: "结局：井边断声", text: "你在井边逼问旧宫女，惊动了郑昭仪的人。第二日，掖庭只说有人夜里失足。", you: "你的线索断在井边，连申辩的机会都没有留下。", allies: "知道内情的人从此不敢再说话，阿蘅旧案被重新压回尘土里。", court: "郑昭仪少了一个隐患，掖庭夜巡却比从前更森严。" },
   poison: { type: "bad", banner: "毒局失守", title: "结局：一盏冷羹", text: "你把莲子羹照常送去中宫。羹里藏着乌头，罪名也早备好了。", you: "你成了尚食局毒案的替罪人，所有证据都被人提前摆成了死局。", allies: "素荷被迫闭口，与你有过好意的人也只能自保。", court: "中宫借此清洗尚食局，真正下毒的人退入更深的帘影。" },
+  queenPoison: { type: "bad", banner: "中宫杀局", title: "结局：香尽灯灭", text: "皇后赐下的安神香里藏着慢毒。你以为那只是一次试探，等察觉时，连脉案都已被人改过。", you: "你倒在册礼前夜，离凤印只差一步。", allies: "云娘、素荷和高内侍各被调离，前面埋下的暗线被中宫一夜剪断。", court: "皇帝震怒，却只查到替死的宫人。真正的谋局藏回凤帘之后。" },
   exile: { type: "other", banner: "前程止步", title: "结局：青灯冷宫", text: "你把一时宠眷当护身符，却没有证据也没有盟友。圣眷散后，冷宫青灯替你数余生。", you: "你活了下来，却被困在冷宫旧院，日日抄经换一盏灯油。", allies: "曾帮过你的人不敢再来，只能偶尔托人送一件旧衣。", court: "六宫很快有了新的风波，你的名字成了新人入宫时的警示。" },
   lake: { type: "bad", banner: "锋芒反噬", title: "结局：曲江沉月", text: "你当众锋芒太露，证据太薄。夜里有人说你失足落水，宫灯照到湖面时，已经没人再问真相。", you: "你把局势逼得太急，却没有给自己留下退路。", allies: "少数想救你的人被调离内廷，云娘若还在，也只能把你的名字藏在心里。", court: "湖面恢复平静，宫里的人学会了少看、少问、少记。" },
   wine: { type: "other", banner: "宠眷尽失", title: "结局：宴上失仪", text: "你饮下那杯换过的酒。毒并不烈，只够让你在众人面前失仪。从此恩宠与前程都成笑话。", you: "你没有死，却再也进不了真正的权力中心。", allies: "杨贵妃收回试探的目光，皇后也不再把你当可用之人。", court: "蓬莱夜宴之后，众人都知道有些局不杀人，只毁人。" },
-  win: { type: "good", banner: "恭喜通关", title: "终章：凤印归掌", rank: "皇后", text: "含元殿钟鼓齐鸣。你用证据、盟友和时机把一盘死棋走活。凤印落掌，长安雪停。", you: "你从宫女走到中宫，掌凤印，定六宫，终于不必再靠旁人的脸色活命。", allies: "云娘入尚宫局，素荷重回尚食局清账，高内侍也因护证有功得以全身而退。", court: "郑昭仪一党伏法，旧案重审，掖庭第一次有人敢把冤名写成白纸黑字。" },
+  win: { type: "good", banner: "恭喜通关", title: "终章：凤印归掌", rank: "皇后", text: "含元殿钟鼓齐鸣。皇后谋害你的香案被当殿揭开，皇帝亲自扶你起身。你用证据、盟友和时机把一盘死棋走活。凤印落掌，长安雪停。", you: "你从宫女走到中宫，不是一步登天，而是在一次次召对、救局和守规矩里让皇帝看见你的心性。", allies: "云娘入尚宫局，素荷重回尚食局清账，高内侍也因护证有功得以全身而退。", court: "旧皇后幽禁别宫，郑昭仪一党伏法，掖庭第一次有人敢把冤名写成白纸黑字。" },
   officialPower: { type: "good", banner: "恭喜达成隐藏结局", title: "终章：女官执令", rank: "女官令", text: "你没有接凤印，而是请立女官院，重整掖庭、尚食、尚宫三司。你不坐中宫，却让六宫规矩从此绕不开你的名字。", you: "你放下后位，换来真正能改宫规的权柄。", allies: "曾被你救下的人被分入各司，成为新女官院的第一批见证者。", court: "后宫仍有争斗，但账册、药牌、名籍从此不再只听妃嫔一句话。" },
   consortAlly: { type: "good", banner: "恭喜达成同盟结局", title: "终章：贵妃同盟", rank: "贵妃", text: "你接受杨贵妃递来的盟约，不急着争后位，而是先掌宴饮、赏赐和消息。六宫都知道，新贵妃笑时，风向已经变了。", you: "你没有立刻登上后位，却拿到了更灵活的生路和权势。", allies: "杨贵妃与你共分六宫消息，高内侍替你守住内廷往来。", court: "皇后之位暂悬，长安的每一场宴饮都变成新的棋局。" },
 };
@@ -540,10 +541,10 @@ const nodes = {
     speaker: "皇帝",
     location: "尚食局前",
     mood: "calm",
-    text: "皇帝听闻你止住毒羹，问你要什么赏。满院宫人都在看，你一句话会决定她们日后帮不帮你。",
+    text: "皇帝听闻你止住毒羹，第一次认真看你。他问你要什么赏。满院宫人都在看，你一句话会决定她们日后帮不帮你，也会决定皇帝记住的是你的野心还是你的分寸。",
     choices: [
-      { text: "求继续查尚食局账册，洗清无辜宫人", next: "kitchenEnd", score: 2, delta: { favor: 1, wit: 1 } },
-      { text: "求赏银分给今日救火的宫人", next: "kitchenEnd", score: 2, delta: { ally: 1, favor: 1 } },
+      { text: "求继续查尚食局账册，洗清无辜宫人", next: "kitchenEnd", score: 2, delta: { favor: 1, wit: 1 }, set: { emperorNotice: true } },
+      { text: "求赏银分给今日救火的宫人", next: "kitchenEnd", score: 2, delta: { ally: 1, favor: 1 }, set: { emperorNotice: true, emperorMercy: true } },
       { text: "求皇帝今夜留宿", ending: "lake", delta: { favor: 1, suspicion: 4 } },
       { text: "什么赏都不要，只求回掖庭", next: "kitchenEnd", score: 0, delta: { favor: -1 } },
     ],
@@ -568,7 +569,10 @@ const nodes = {
     speaker: "掌衣女官",
     location: "蓬莱殿",
     mood: "tense",
-    text: "宴席座次忽然变动，你被安排在郑昭仪下首，离皇帝很近，也离风口很近。",
+    text: [
+      { if: "emperorNotice", value: "宴席座次忽然变动，你被安排在郑昭仪下首，离皇帝很近。皇帝似乎认出你是尚食局那日不求宠幸的人，皇后的目光也因此停了一瞬。" },
+      { value: "宴席座次忽然变动，你被安排在郑昭仪下首，离皇帝很近，也离风口很近。" },
+    ],
     choices: [
       { text: "欣然入座，离皇帝越近越好", next: "banquetDress", score: 0, delta: { suspicion: 2 } },
       { text: "请女官照原册复核座次", next: "banquetDress", score: 2, delta: { wit: 1 } },
@@ -635,10 +639,27 @@ const nodes = {
     mood: "tense",
     text: "裴淑妃忽然让你以宫灯为题作句。她不是考才情，是要看你会不会抢妃嫔风头。",
     choices: [
-      { text: "借灯赞中宫明照，不提自己", next: "banquetJade", score: 2, delta: { wit: 1, ally: 1 } },
-      { text: "作一句锋利艳词，让皇帝记住你", next: "banquetJade", score: 1, delta: { favor: 1, suspicion: 2 } },
-      { text: "推说不会，沉默到底", next: "banquetJade", score: 0, delta: { favor: -1 } },
+      { text: "借灯赞中宫明照，不提自己", next: "banquetEmperor", score: 2, delta: { wit: 1, ally: 1 } },
+      { text: "作一句锋利艳词，让皇帝记住你", next: "banquetEmperor", score: 1, delta: { favor: 1, suspicion: 2 }, set: { queenAlarm: true } },
+      { text: "推说不会，沉默到底", next: "banquetEmperor", score: 0, delta: { favor: -1 } },
       { text: "借灯暗讽郑昭仪", ending: "lake", delta: { suspicion: 4 } },
+    ],
+  },
+  banquetEmperor: {
+    chapter: 3,
+    speaker: "皇帝",
+    location: "蓬莱殿",
+    mood: "calm",
+    text: [
+      { if: "emperorMercy", value: "皇帝忽然问起尚食局那日救火的宫人是否领到赏银。你若只会讨巧，他会失望；若还记得下人的命，他会真正把你放进眼里。" },
+      { if: "emperorNotice", value: "皇帝忽然问起尚食局案后的账册。你听出他不是问案，是问你有没有把恩宠当成捷径。" },
+      { value: "皇帝忽然问你：若有一日得宠，你最先想改宫中哪一条规矩？这话太轻，却足够让皇后抬眼。" },
+    ],
+    choices: [
+      { text: "说先让赏罚有册可查，免下人替贵人背罪", next: "banquetJade", score: 2, delta: { favor: 1, wit: 1 }, set: { emperorBond: true, queenAlarm: true } },
+      { text: "说先谢陛下知遇，其他都不敢想", next: "banquetJade", score: 1, delta: { favor: 1 } },
+      { text: "说若得宠，愿日日侍奉御前", next: "banquetJade", score: 0, delta: { favor: 1, suspicion: 3 }, set: { queenAlarm: true } },
+      { text: "说宫规自有中宫主持，自己不敢置喙", next: "banquetJade", score: 1, delta: { suspicion: -1 } },
     ],
   },
   banquetJade: {
@@ -646,7 +667,10 @@ const nodes = {
     speaker: "韦皇后",
     location: "蓬莱殿",
     mood: "tense",
-    text: "皇后忽然问起你入宫时那枚青玉佩。若说错来历，前面登记过的凭证也可能变成把柄。",
+    text: [
+      { if: "queenAlarm", value: "皇帝的话刚落，皇后便问起你入宫时那枚青玉佩。她已不把你当一枚小棋子，而是当一个会被皇帝记住的威胁。" },
+      { value: "皇后忽然问起你入宫时那枚青玉佩。若说错来历，前面登记过的凭证也可能变成把柄。" },
+    ],
     choices: [
       { text: "说玉佩早已入库，请皇后查库簿", next: "banquetLetter", rescueFlag: "jadeRegistered", rescueScore: 2, score: 1, rescueDelta: { wit: 1 } },
       { text: "说已经丢了", ending: "exile", delta: { suspicion: 4 } },
@@ -704,9 +728,13 @@ const nodes = {
     speaker: "皇帝",
     location: "紫宸殿",
     mood: "tense",
-    text: "{address}晋为婕妤，被召入紫宸殿。皇帝问你为何能连破毒羹、外信两案。你不能说自己来自千年之后。",
+    text: [
+      { if: "emperorBond", value: "{address}晋为婕妤，被召入紫宸殿。皇帝屏退左右，问你为何总先救下人、再查贵人。你听得出，这已不是单纯审案，而是信任。" },
+      { if: "emperorNotice", value: "{address}晋为婕妤，被召入紫宸殿。皇帝问你为何能连破毒羹、外信两案。你不能说自己来自千年之后。" },
+      { value: "{address}晋为婕妤，被召入紫宸殿。皇帝问你为何能连破毒羹、外信两案。你不能说自己来自千年之后。" },
+    ],
     choices: [
-      { text: "说自己只认账册、药牌、时辰三样死物", next: "sealEmperor", score: 2, delta: { favor: 1, wit: 1 } },
+      { text: "说自己只认账册、药牌、时辰三样死物", next: "sealEmperor", score: 2, delta: { favor: 1, wit: 1 }, set: { emperorTrust: true } },
       { text: "说梦中神女指点", ending: "exile", delta: { suspicion: 5 } },
       { text: "说都是郑昭仪所为，请立刻赐死", ending: "lake", delta: { suspicion: 4 } },
       { text: "说自己只是运气好，不敢居功", next: "sealEmperor", score: 0, delta: { favor: -1 } },
@@ -717,10 +745,13 @@ const nodes = {
     speaker: "皇帝",
     location: "紫宸殿",
     mood: "tense",
-    text: "皇帝追问：若朕今日只信宠眷，不信证据，你该如何自保？",
+    text: [
+      { if: "emperorBond", value: "皇帝追问：若朕今日想护你，可六宫都说你蛊惑帝心，你要朕护人，还是护证据？殿外，皇后派来的女官已经候着。" },
+      { value: "皇帝追问：若朕今日只信宠眷，不信证据，你该如何自保？" },
+    ],
     choices: [
       { text: "说愿入冷宫等查清", ending: "exile", delta: { favor: -1 } },
-      { text: "说证据可离人，人心不可离证", next: "sealLedger", score: 2, delta: { wit: 1 } },
+      { text: "说证据可离人，人心不可离证", next: "sealLedger", score: 2, delta: { wit: 1 }, set: { emperorTrust: true } },
       { text: "说陛下圣明，绝不会错判", next: "sealLedger", score: 1, delta: { favor: 1 } },
       { text: "说若被冤，就请死明志", ending: "lake", delta: { suspicion: 4 } },
     ],
@@ -814,10 +845,26 @@ const nodes = {
     mood: "tense",
     text: "薛将军被传入殿。若他不能说明换防笔迹，禁军线会断，你也会被拖下水。",
     choices: [
-      { text: "请他说出伪文书的三处笔锋差异", next: "sealLastTrap", rescueFlag: "generalClue", rescueScore: 2, fallbackEnding: "lake", rescueDelta: { wit: 1 } },
+      { text: "请他说出伪文书的三处笔锋差异", next: "sealQueenPlot", rescueFlag: "generalClue", rescueScore: 2, fallbackEnding: "lake", rescueDelta: { wit: 1 } },
       { text: "呈上私收的腰牌证明他与你相识", ending: "lake", delta: { suspicion: 5 } },
-      { text: "让高内侍复述蓬莱殿外隔帘听证", next: "sealLastTrap", rescueFlag: "eunuchTrust", rescueScore: 2, fallbackEnding: "lake", rescueDelta: { ally: 1 } },
-      { text: "让薛将军自行辩白", next: "sealLastTrap", score: 0, delta: { suspicion: 2 } },
+      { text: "让高内侍复述蓬莱殿外隔帘听证", next: "sealQueenPlot", rescueFlag: "eunuchTrust", rescueScore: 2, fallbackEnding: "lake", rescueDelta: { ally: 1 } },
+      { text: "让薛将军自行辩白", next: "sealQueenPlot", score: 0, delta: { suspicion: 2 } },
+    ],
+  },
+  sealQueenPlot: {
+    chapter: 4,
+    speaker: "韦皇后",
+    location: "含元殿侧殿",
+    mood: "danger",
+    text: [
+      { if: "emperorTrust", value: "皇帝已显出护你之意，皇后终于不再试探。她赐下一炉安神香，说你连日受惊，该在侧殿静候册问。香灰甜得过分，你知道这不是恩典，是灭口。" },
+      { value: "皇后赐下一炉安神香，说你连日受惊，该在侧殿静候册问。香灰甜得过分，你知道这不是恩典，是灭口。" },
+    ],
+    choices: [
+      { text: "请素荷验香灰与药牌残粉是否同源", next: "sealLastTrap", showIf: "suheAlive", rescueFlag: "suheAlive", rescueScore: 2, fallbackEnding: "queenPoison", rescueDelta: { ally: 1 }, set: { queenPlotExposed: true }, rescueText: "素荷只闻了一下便白了脸：香里有与乌头同柜的辛苦味。尚食局的小宫女没有高位，却能救你一命。" },
+      { text: "让高内侍封炉，按内侍省规矩登记赐物", next: "sealLastTrap", showIf: "eunuchTrust", rescueFlag: "eunuchTrust", rescueScore: 2, fallbackEnding: "queenPoison", rescueDelta: { ally: 1 }, set: { queenPlotExposed: true }, rescueText: "高内侍袖中早备了封条。香炉一封，中宫赐物便成了不可抵赖的证据。" },
+      { text: "请云娘去传皇帝身边近侍，不惊动中宫人", next: "sealLastTrap", showIf: "yunProtected", rescueFlag: "yunProtected", rescueScore: 2, score: 1, rescueDelta: { ally: 1 }, set: { queenPlotExposed: true }, rescueText: "云娘贴墙而去，把消息递到御前。你曾在掖庭护过她一次，她今日替你抢回一线生机。" },
+      { text: "照常入侧殿等候，免得得罪皇后", ending: "queenPoison", delta: { suspicion: -1 } },
     ],
   },
   sealLastTrap: {
@@ -825,7 +872,10 @@ const nodes = {
     speaker: "韦皇后",
     location: "含元殿",
     mood: "danger",
-    text: "最后一问，皇后把一页空白懿旨推到你面前：若今日你胜了，第一笔写什么？",
+    text: [
+      { if: "queenPlotExposed", value: "香炉被封到殿前，皇后的脸色终于变了。她把一页空白懿旨推到你面前，声音仍稳：若今日你胜了，第一笔写什么？这是最后一次试你会不会反噬六宫。" },
+      { value: "最后一问，皇后把一页空白懿旨推到你面前：若今日你胜了，第一笔写什么？" },
+    ],
     choices: [
       { text: "写诛郑氏三族", ending: "exile", delta: { suspicion: 5 } },
       { text: "写重审掖庭旧案，禁私刑", next: "sealMercy", score: 2, delta: { ally: 1 } },
@@ -838,7 +888,10 @@ const nodes = {
     speaker: "郑昭仪",
     location: "含元殿",
     mood: "tense",
-    text: "郑昭仪伏罪，旧皇后病重交出凤印。满殿都在看你成为中宫后的第一道懿旨。",
+    text: [
+      { if: "queenPlotExposed", value: "郑昭仪伏罪，皇后谋害你的香案也被当殿坐实。皇帝下旨幽禁旧后，凤印暂悬。满殿都在看你若成为中宫，第一道懿旨会写什么。" },
+      { value: "郑昭仪伏罪，旧皇后病重交出凤印。满殿都在看你成为中宫后的第一道懿旨。" },
+    ],
     choices: [
       { text: "重整掖庭名册，禁私刑，立女官复核制度", next: "sealEnd", score: 2, delta: { ally: 2, favor: 1 } },
       { text: "不接凤印，请立女官院总领六宫文簿", ending: "officialPower", rescueFlag: "ledgerCopy", fallbackEnding: "exile", delta: { ally: 1 } },
